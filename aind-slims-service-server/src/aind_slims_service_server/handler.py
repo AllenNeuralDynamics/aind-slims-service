@@ -4,7 +4,7 @@ import logging
 
 from requests_toolbelt.sessions import BaseUrlSession
 
-from aind_service_template_server.models import Content
+from aind_slims_service_server.models import Content
 
 
 class SessionHandler:
