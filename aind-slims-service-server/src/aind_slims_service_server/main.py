@@ -15,17 +15,17 @@ log_level = os.getenv("LOG_LEVEL", "INFO")
 logging.basicConfig(level=log_level)
 
 description = """
-## aind-service-template
+## aind-slims-service-server
 
-Service to pull data from example backend.
+Service to pull data from SLIMS.
 
 """
 
 # noinspection PyTypeChecker
 app = FastAPI(
-    title="aind-service-template",
+    title="aind-slims-service-server",
     description=description,
-    summary="Serves data from example backend.",
+    summary="Serves data from SLIMS.",
     version=service_version,
 )
 
