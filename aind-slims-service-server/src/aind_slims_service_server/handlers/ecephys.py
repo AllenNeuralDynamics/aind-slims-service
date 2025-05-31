@@ -1,4 +1,4 @@
-"""Module to handle fetching ephys data from SLIMS."""
+"""Module to retrieve ephys data from SLIMS using session object."""
 
 from decimal import Decimal
 from datetime import datetime
@@ -8,16 +8,20 @@ from slims.criteria import equals
 from aind_slims_service_server.table_handler import SlimsTableHandler, get_attr_or_none
 from aind_slims_service_server.models import (
     SlimsEcephysData,
-    SlimsStreamModule,
-    SlimsRewardSpouts,
+    EcephysRewardSpouts,
+    EcephysStreamModule,
 )
 from slims.internal import Record
 
-class SlimsEcephysHandler(SlimsTableHandler):
+# TODO: replace hardcoded strs with ReferenceDataRecord.model_fields["arc_angle"].alias 
+# or alias = lambda field: ReferenceDataRecord.model_fields[field].alias
+# arc_angle = get_attr_or_none(row, alias("arc_angle"))
+
+class EcephysSessionHandler(SlimsTableHandler):
     """Class to handle getting Ephys Session info from SLIMS."""
 
     @staticmethod
-    def _get_stream_module_data(row: Record) -> SlimsStreamModule:
+    def _get_stream_module_data(row: Record) -> EcephysStreamModule:
         """Parses a stream module info from a SLIMS row."""
         arc_angle = get_attr_or_none(row, "rdrc_cf_arcAngle")
         module_angle = get_attr_or_none(row, "rdrc_cf_moduleAngle")
@@ -32,7 +36,7 @@ class SlimsEcephysHandler(SlimsTableHandler):
         manipulator_x = get_attr_or_none(row, "rdrc_cf_manipulatorX")
         manipulator_y = get_attr_or_none(row, "rdrc_cf_manipulatory")
         manipulator_z = get_attr_or_none(row, "rdrc_cf_manipulatorZ")
-        return SlimsStreamModule(
+        return EcephysStreamModule(
             implant_hole=get_attr_or_none(row, "rdrc_cf_implantHole"),
             assembly_name=get_attr_or_none(row, "rdrc_cf_assemblyName"),
             probe_name=get_attr_or_none(row, "rdrc_cf_probeName"),
@@ -109,9 +113,9 @@ class SlimsEcephysHandler(SlimsTableHandler):
         )
 
     @staticmethod
-    def _get_reward_spouts_data(row: Record) -> SlimsRewardSpouts:
+    def _get_reward_spouts_data(row: Record) -> EcephysRewardSpouts:
         """Parses a reward spouts info from a SLIMS row."""
-        return SlimsRewardSpouts(
+        return EcephysRewardSpouts(
             spout_side=get_attr_or_none(row, "rdrc_cf_spoutSide"),
             starting_position=get_attr_or_none(
                 row, "rdrc_cf_startingPosition"
