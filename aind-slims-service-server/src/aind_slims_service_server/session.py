@@ -1,7 +1,6 @@
 """Module to handle requests session"""
 
-from requests_toolbelt.sessions import BaseUrlSession
-from requests.auth import HTTPBasicAuth
+from slims.slims import Slims
 
 from aind_slims_service_server.configs import Settings
 
@@ -13,15 +12,10 @@ def get_session():
     Yield a session object. This will automatically close the session when
     finished.
     """
-    session = BaseUrlSession(base_url=settings.host)
-    session.auth = HTTPBasicAuth(
-        settings.username, settings.password.get_secret_value()
+    session = Slims(
+        name=settings.db,
+        username=settings.username,
+        password=settings.password.get_secret_value(),
+        url=settings.host,
     )
-    session.headers.update({
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-    })
-    try:
-        yield session
-    finally:
-        session.close()
+    yield session
