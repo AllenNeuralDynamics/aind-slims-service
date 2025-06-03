@@ -2,48 +2,52 @@
 
 import os
 from pathlib import Path
-
+import json
+from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 from requests import Response
 from requests_toolbelt.sessions import BaseUrlSession
-
+from aind_slims_service_server.models import (
+    Content,
+    ExperimentRun,
+    ExperimentRunStep,
+    ExperimentRunStepContent,
+    ExperimentTemplate,
+    ReferenceDataRecord,
+    Result
+)
 from aind_slims_service_server.main import app
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
-
-@pytest.fixture()
-def mock_get_example_response(mocker):
-    """Mock example response"""
-    with open(RESOURCES_DIR / "example_response.txt") as f:
-        contents = f.read()
-    mock_get = mocker.patch("requests_toolbelt.sessions.BaseUrlSession.get")
-    mock_response = Response()
-    mock_response.status_code = 200
-    mock_response._content = contents.encode("utf-8")
-    mock_get.return_value = mock_response
-
-
-@pytest.fixture()
-def mock_get_empty_response(mocker):
-    """Mock empty string response"""
-
-    mock_get = mocker.patch("requests_toolbelt.sessions.BaseUrlSession.get")
-    mock_response = Response()
-    mock_response.status_code = 200
-    mock_response._content = "".encode("utf-8")
-    mock_get.return_value = mock_response
-
+@pytest.fixture
+def test_slims_settings():
+    """Mock the settings instance used in the session module."""
+    with patch("aind_slims_service_server.session.settings") as mock_settings:
+        mock_settings.db = "test_db"
+        mock_settings.username = "user"
+        mock_settings.password.get_secret_value.return_value = "pass"
+        mock_settings.host = "http://localhost"
+        yield mock_settings
 
 @pytest.fixture(scope="session")
-def get_test_session():
-    """Generate a session for testing."""
-    session = BaseUrlSession(base_url="example")
-    try:
-        yield session
-    finally:
-        session.close()
+def ecephys_resources_dir():
+    return Path(os.path.dirname(os.path.realpath(__file__))) / "resources" / "ecephys"
+
+@pytest.fixture(scope="session")
+def load_ecephys_json(ecephys_resources_dir):
+    def _load(filename):
+        with open(ecephys_resources_dir / filename, "r") as f:
+            return json.load(f)
+    return _load
+
+@pytest.fixture(scope="session")
+def form_record():
+    from slims.internal import Record
+    def _form(json_entity):
+        return Record(json_entity=json_entity, slims_api=None)
+    return _form
 
 
 @pytest.fixture(scope="session")

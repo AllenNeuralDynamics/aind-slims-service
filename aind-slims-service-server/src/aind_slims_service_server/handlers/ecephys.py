@@ -5,11 +5,12 @@ from datetime import datetime
 from typing import List, Optional, Tuple
 from networkx import DiGraph, descendants
 from slims.criteria import equals
-from aind_slims_service_server.table_handler import get_attr_or_none, SlimsTableHandler
+from aind_slims_service_server.handlers.table_handler import get_attr_or_none, SlimsTableHandler
 from aind_slims_service_server.models import (
     ReferenceDataRecord,
     Content,
     ExperimentRunStep,
+    ExperimentRun,
     Result,
     SlimsEcephysData,
     EcephysRewardSpouts,
@@ -218,9 +219,8 @@ class EcephysSessionHandler(SlimsTableHandler):
         for node in root_nodes:
             ephys_data = SlimsEcephysData()
             ephys_data.experiment_run_created_on = get_attr_or_none(
-                g.nodes[node]["row"], "xprn_createdOn"
+                g.nodes[node]["row"], ExperimentRun.model_fields["created_on"].alias
             )
-
             for n in descendants(g, node):
                 row = g.nodes[n]["row"]
                 table_name = g.nodes[n]["table_name"]
@@ -230,14 +230,13 @@ class EcephysSessionHandler(SlimsTableHandler):
                 )
                 if table_handler:
                     table_handler(ephys_data, row)
-
             if (
                 subject_id is None or subject_id == ephys_data.subject_id
             ) and (
                 session_name is None or session_name == ephys_data.session_name
             ):
                 ephys_data_list.append(
-                    SlimsEcephysData.model_validate(ephys_data)
+                    SlimsEcephysData.model_validate(ephys_data.model_dump())
                 )
 
         return ephys_data_list
@@ -392,6 +391,14 @@ class EcephysSessionHandler(SlimsTableHandler):
             root_nodes=root_nodes,
             subject_id=subject_id,
             session_name=session_name,
+        )
+
+        ephys_data.sort(
+            key=lambda m: (
+                m.experiment_run_created_on is None,
+                m.experiment_run_created_on,
+            ),
+            reverse=True,
         )
 
         return ephys_data

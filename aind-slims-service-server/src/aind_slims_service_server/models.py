@@ -1,8 +1,9 @@
 """Models and schema definitions for backend data structures"""
 
 from typing import Literal, Optional, List
+from datetime import datetime, timezone
 from decimal import Decimal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from aind_slims_service_server import __version__
 
@@ -116,10 +117,10 @@ class Content(BaseModel):
     lab_team: Optional[str] = Field(default=None, alias="cntn_cf_fk_labTeamAcronym")
     batch_id: Optional[str] = Field(default=None, alias="cntn_cf_batchId")
     product_filtering_without: Optional[str] = Field(default=None, alias="cntn_fk_product_strain")
-    created: Optional[str] = Field(default=None, alias="cntn_createdBy")
-    created: Optional[str] = Field(default=None, alias="cntn_createdOn")
-    modified: Optional[str] = Field(default=None, alias="cntn_modifiedBy")
-    modified: Optional[str] = Field(default=None, alias="cntn_modifiedOn")
+    created_by: Optional[str] = Field(default=None, alias="cntn_createdBy")
+    created_on: Optional[str] = Field(default=None, alias="cntn_createdOn")
+    modified_by: Optional[str] = Field(default=None, alias="cntn_modifiedBy")
+    modified_on: Optional[str] = Field(default=None, alias="cntn_modifiedOn")
     original: Optional[str] = Field(default=None, alias="cntn_fk_originalContent")
     external: Optional[str] = Field(default=None, alias="cntn_externalId")
 
@@ -139,8 +140,8 @@ class ExperimentRun(BaseModel):
     cancelled: Optional[str] = Field(default=None, alias="xprn_cancelled")
     completed: Optional[str] = Field(default=None, alias="xprn_completed")
     completed: Optional[str] = Field(default=None, alias="xprn_completedOn")
-    created: Optional[str] = Field(default=None, alias="xprn_createdBy")
-    created: Optional[str] = Field(default=None, alias="xprn_createdOn")
+    created_by: Optional[str] = Field(default=None, alias="xprn_createdBy")
+    created_on: Optional[str] = Field(default=None, alias="xprn_createdOn")
     modified: Optional[str] = Field(default=None, alias="xprn_modifiedBy")
     modified: Optional[str] = Field(default=None, alias="xprn_modifiedOn")
     last_event: Optional[str] = Field(default=None, alias="xprn_lastEventOn")
@@ -171,10 +172,10 @@ class ExperimentRunStep(BaseModel):
     active_mouse_platform: Optional[bool] = Field(default=None, alias="xprs_cf_activeMousePlatform")        
     unique: Optional[str] = Field(default=None, alias="xprs_uniqueIdentifier")
     status: Optional[str] = Field(default=None, alias="xprs_status")
-    created: Optional[str] = Field(default=None, alias="xprs_createdBy")
-    created: Optional[str] = Field(default=None, alias="xprs_createdOn")
-    modified: Optional[str] = Field(default=None, alias="xprs_modifiedBy")
-    modified: Optional[str] = Field(default=None, alias="xprs_modifiedOn")
+    created_by: Optional[str] = Field(default=None, alias="xprs_createdBy")
+    created_on: Optional[str] = Field(default=None, alias="xprs_createdOn")
+    modified_by: Optional[str] = Field(default=None, alias="xprs_modifiedBy")
+    modified_on: Optional[str] = Field(default=None, alias="xprs_modifiedOn")
     last_event: Optional[str] = Field(default=None, alias="xprs_lastEventOn")
 
 class ExperimentRunStepContent(BaseModel):
@@ -186,8 +187,8 @@ class ExperimentRunStepContent(BaseModel):
     unique: Optional[str] = Field(default=None, alias="xrsc_uniqueIdentifier")
     content: Optional[str] = Field(default=None, alias="xrsc_contentRemoved")
     worklist: Optional[str] = Field(default=None, alias="xrsc_workListDate")
-    created: Optional[str] = Field(default=None, alias="xrsc_createdBy")
-    created: Optional[str] = Field(default=None, alias="xrsc_createdOn")
+    created_by: Optional[str] = Field(default=None, alias="xrsc_createdBy")
+    created_on: Optional[str] = Field(default=None, alias="xrsc_createdOn")
     modified: Optional[str] = Field(default=None, alias="xrsc_modifiedBy")
     modified: Optional[str] = Field(default=None, alias="xrsc_modifiedOn")
 
@@ -204,8 +205,8 @@ class ExperimentTemplate(BaseModel):
     version: Optional[str] = Field(default=None, alias="xptm_versionComments")
     description: Optional[str] = Field(default=None, alias="xptm_description")
     experiment_run_unique_identifier: Optional[str] = Field(default=None, alias="xptm_uniqueIdentifierMask")
-    instrument: Optional[str] = Field(default=None, alias="xptm_instrumentRequired")
-    instrument: Optional[str] = Field(default=None, alias="xptm_fk_instrumentType")
+    instrument_required: Optional[str] = Field(default=None, alias="xptm_instrumentRequired")
+    instrument_type: Optional[str] = Field(default=None, alias="xptm_fk_instrumentType")
     execute_steps_in_correct: Optional[str] = Field(default=None, alias="xptm_stepsInOrder")
     only_the_selected_roles_can: Optional[str] = Field(default=None, alias="xptm_validatorRoleRestricted")  
     skip_protocol_run: Optional[str] = Field(default=None, alias="xptm_skipRunCreationForm")
@@ -216,12 +217,12 @@ class ExperimentTemplate(BaseModel):
     protocol_category_fixed: Optional[str] = Field(default=None, alias="xptm_cf_protocolCategory")
     lab: Optional[str] = Field(default=None, alias="xptm_cf_fk_labTeam")
     publication: Optional[str] = Field(default=None, alias="xptm_fk_publicationStatus")
-    queue: Optional[str] = Field(default=None, alias="xptm_fk_from_queue")
-    queue: Optional[str] = Field(default=None, alias="xptm_fk_to_queue")
-    created: Optional[str] = Field(default=None, alias="xptm_createdBy")
-    created: Optional[str] = Field(default=None, alias="xptm_createdOn")
-    modified: Optional[str] = Field(default=None, alias="xptm_modifiedBy")
-    modified: Optional[str] = Field(default=None, alias="xptm_modifiedOn")
+    from_queue: Optional[str] = Field(default=None, alias="xptm_fk_from_queue")
+    to_queue: Optional[str] = Field(default=None, alias="xptm_fk_to_queue")
+    created_by: Optional[str] = Field(default=None, alias="xptm_createdBy")
+    created_on: Optional[str] = Field(default=None, alias="xptm_createdOn")
+    modified_by: Optional[str] = Field(default=None, alias="xptm_modifiedBy")
+    modified_on: Optional[str] = Field(default=None, alias="xptm_modifiedOn")
 
 class ReferenceDataRecord(BaseModel):
     """Expected Reference Data Record from SLIMS"""
@@ -469,7 +470,7 @@ class EcephysRewardSpouts(BaseModel):
 class SlimsEcephysData(BaseModel):
     """Expected Model that needs to be extracted from SLIMS"""
 
-    experiment_run_created_on: Optional[int] = None
+    experiment_run_created_on: Optional[datetime] = None
     subject_id: Optional[str] = None
     operator: Optional[str] = None
     instrument: Optional[str] = None
@@ -489,7 +490,30 @@ class SlimsEcephysData(BaseModel):
     other_reward_solution: Optional[str] = None
     reward_spouts: Optional[List[EcephysRewardSpouts]] = []
     stream_modalities: Optional[List[str]] = None
-    stream_modules: Optional[List[EcephysRewardSpouts]] = []
+    stream_modules: Optional[List[EcephysStreamModule]] = []
     daq_names: Optional[List[str]] = None
     camera_names: Optional[List[str]] = None
+
+    @field_validator("experiment_run_created_on", mode="before")
+    def parse_datetime(cls, val):
+        if val is None:
+            return None
+        if isinstance(val, datetime):
+            return val
+        if isinstance(val, (int, float)):
+            # Handle ms vs s
+            return datetime.fromtimestamp(val / 1000 if val > 1e12 else val, tz=timezone.utc)
+        if isinstance(val, str):
+            if val.isdigit():
+                val_int = int(val)
+                return datetime.fromtimestamp(val_int / 1000 if val_int > 1e12 else val_int, tz=timezone.utc)
+            try:
+                # Try parsing ISO format, add UTC if missing
+                dt = datetime.fromisoformat(val)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except ValueError:
+                pass
+        raise ValueError(f"Cannot parse datetime from value: {val}")
 

@@ -37,7 +37,7 @@ async def get_ecephys_sessions(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
-        examples=["632269"],
+        examples=["750108"],
     ),
     session_name: Optional[str] = Query(
         None,
