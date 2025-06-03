@@ -1,6 +1,7 @@
 """Module to test main app"""
 
 import pytest
+from unittest.mock import patch
 
 
 class TestMain:
@@ -11,16 +12,16 @@ class TestMain:
         response = client.get("/healthcheck")
         assert 200 == response.status_code
 
-    def test_get_length(self, client, mock_get_example_response):
-        """Tests content route length"""
-        response = client.get("/length")
-        expected_json = {"info": "1244", "arg": "length"}
-        assert expected_json == response.json()
-        assert 200 == response.status_code
-
-    def test_get_raw(self, client, mock_get_example_response):
-        """Tests content route length"""
-        response = client.get("/raw")
+    @patch(
+        "aind_slims_service_server.handlers.ecephys."
+        "EcephysSessionHandler.get_ephys_data_from_slims"
+    )
+    def test_get_ecephys_sessions(
+        self, mock_get_ephys, client, test_ecephys_data
+    ):
+        """Tests ecephys sessions endpoint"""
+        mock_get_ephys.return_value = test_ecephys_data
+        response = client.get("/ecephys_sessions?subject_id=750108")
         assert 200 == response.status_code
 
 

@@ -4,7 +4,7 @@ Module to handle fetching data from slims
 
 import logging
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, List, Optional, Union
 
 from networkx import DiGraph
@@ -33,21 +33,6 @@ def parse_html(v: Optional[str]) -> Optional[str]:
         logging.warning(f"An exception occurred parsing link {v}: {e}")
         return None
 
-def parse_datetime(val):
-    if val is None:
-        return None
-    if isinstance(val, (int, float)):
-        dt = datetime.fromtimestamp(val / 1000 if val > 1e12 else val, tz=timezone.utc)
-        return dt
-    if isinstance(val, str):
-        if val.isdigit():
-            val_int = int(val)
-            return datetime.fromtimestamp(val_int / 1000 if val_int > 1e12 else val_int, tz=timezone.utc)
-        try:
-            return datetime.fromisoformat(val)
-        except ValueError:
-            pass
-    raise ValueError(f"Cannot parse datetime from value: {val}")
 
 def get_attr_or_none(
     record: Record, field_name: str, attr_name: str = "value"
@@ -73,6 +58,22 @@ def get_attr_or_none(
         return getattr(obj_field, attr_name, None)
     else:
         return None
+
+
+def parse_date(
+    date_str: Optional[str],
+) -> Union[Optional[datetime], ValueError]:
+    """Parse a date_str to datetime object or return a Bad Request response"""
+    if date_str is None:
+        return None
+    else:
+        try:
+            dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+            return dt
+        except ValueError:
+            raise ValueError(
+                f"Invalid date format: {date_str}. Expected ISO format."
+            )
 
 
 class SlimsTableHandler:

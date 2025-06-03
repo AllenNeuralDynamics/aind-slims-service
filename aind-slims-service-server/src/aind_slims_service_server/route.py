@@ -1,6 +1,6 @@
 """Module to handle endpoint responses"""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from typing import Optional, List
 from slims.slims import Slims
 
@@ -60,7 +60,9 @@ async def get_ecephys_sessions(
     ## Ecephys session metadata
     Retrieves Ecephys session information from SLIMS.
     """
-    slims_ecephys_sessions = EcephysSessionHandler(session=session).get_ephys_data_from_slims(
+    slims_ecephys_sessions = EcephysSessionHandler(
+        session=session
+    ).get_ephys_data_from_slims(
         subject_id=subject_id,
         session_name=session_name,
         start_date_greater_than_or_equal=start_date_gte,

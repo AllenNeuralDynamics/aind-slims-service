@@ -7,6 +7,7 @@ from aind_settings_utils.aws import (
     ParameterStoreAppBaseSettings,
 )
 
+
 class Settings(ParameterStoreAppBaseSettings):
     """Settings for connecting to SLIMS Database."""
 
