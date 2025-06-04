@@ -2,9 +2,10 @@
 
 import unittest
 from datetime import datetime, timezone
+
 from aind_slims_service_server.models import (
-    SlimsEcephysData,
     HealthCheck,
+    SlimsEcephysData,
 )
 
 

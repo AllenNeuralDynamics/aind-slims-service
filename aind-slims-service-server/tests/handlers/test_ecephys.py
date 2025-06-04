@@ -1,43 +1,35 @@
 """Tests methods in ecephys handler module"""
 
-import os
-from pathlib import Path
 from unittest.mock import MagicMock, patch
+
 import pytest
 
 from aind_slims_service_server.handlers.ecephys import (
     EcephysSessionHandler,
 )
 
-RESOURCES_DIR = (
-    Path(os.path.dirname(os.path.realpath(__file__)))
-    / ".."
-    / "resources"
-    / "ecephys"
-)
-
 
 @pytest.fixture(autouse=True)
-def setup_ecephys_data(load_ecephys_json, form_record):
+def setup_ecephys_data(load_json, form_record):
     """Fixture to set up ecephys data for tests."""
-    content = [form_record(j) for j in load_ecephys_json("content.json")]
+    content = [form_record(j) for j in load_json("content.json", subdir="ecephys")]
     experiment_run = [
-        form_record(j) for j in load_ecephys_json("experiment_run.json")
+        form_record(j) for j in load_json("experiment_run.json", subdir="ecephys")
     ]
     experiment_run_step = [
-        form_record(j) for j in load_ecephys_json("experiment_run_step.json")
+        form_record(j) for j in load_json("experiment_run_step.json", subdir="ecephys")
     ]
     experiment_run_step_content = [
         form_record(j)
-        for j in load_ecephys_json("experiment_run_step_content.json")
+        for j in load_json("experiment_run_step_content.json", subdir="ecephys")
     ]
     experiment_template = [
-        form_record(j) for j in load_ecephys_json("experiment_template.json")
+        form_record(j) for j in load_json("experiment_template.json", subdir="ecephys")
     ]
     reference_data_record = [
-        form_record(j) for j in load_ecephys_json("reference_data_record.json")
+        form_record(j) for j in load_json("reference_data_record.json", subdir="ecephys")
     ]
-    result = [form_record(j) for j in load_ecephys_json("result.json")]
+    result = [form_record(j) for j in load_json("result.json", subdir="ecephys")]
 
     return {
         "content": content,

@@ -1,11 +1,12 @@
 """Module to handle endpoint responses"""
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from typing import Optional, List
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from slims.slims import Slims
 
 from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
-from aind_slims_service_server.models import SlimsEcephysData, HealthCheck
+from aind_slims_service_server.models import HealthCheck, SlimsEcephysData
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()

@@ -1,7 +1,9 @@
 """Tests session module"""
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+
 from aind_slims_service_server.session import get_session
 
 

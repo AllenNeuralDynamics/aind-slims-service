@@ -1,27 +1,29 @@
 """Module to retrieve ephys data from SLIMS using session object."""
 
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
 from typing import List, Optional, Tuple
+
 from networkx import DiGraph, descendants
 from slims.criteria import equals
+from slims.internal import Record
+
 from aind_slims_service_server.handlers.table_handler import (
-    get_attr_or_none,
     SlimsTableHandler,
+    get_attr_or_none,
     parse_date,
 )
 from aind_slims_service_server.models import (
-    ReferenceDataRecord,
     Content,
-    ExperimentRunStep,
-    ExperimentRun,
-    Result,
-    SlimsEcephysData,
     EcephysRewardSpouts,
     EcephysStreamModule,
+    ExperimentRun,
+    ExperimentRunStep,
+    ReferenceDataRecord,
+    Result,
+    SlimsEcephysData,
     alias,
 )
-from slims.internal import Record
 
 
 class EcephysSessionHandler(SlimsTableHandler):

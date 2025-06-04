@@ -1,6 +1,7 @@
 """Module to handle requests session"""
 
 from slims.slims import Slims
+
 from aind_slims_service_server.configs import Settings
 
 

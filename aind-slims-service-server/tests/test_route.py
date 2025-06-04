@@ -1,7 +1,8 @@
 """Test routes"""
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 
 class TestHealthcheckRoute:

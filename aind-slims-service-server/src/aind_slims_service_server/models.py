@@ -1,8 +1,9 @@
 """Models and schema definitions for backend data structures"""
 
-from typing import Literal, Optional, List
 from datetime import datetime
 from decimal import Decimal
+from typing import List, Literal, Optional
+
 from pydantic import BaseModel, Field
 
 from aind_slims_service_server import __version__
@@ -47,28 +48,28 @@ class Content(BaseModel):
     )
     dye_name: Optional[str] = Field(default=None, alias="cntn_cf_dyeName")
     virus_name: Optional[str] = Field(default=None, alias="cntn_cf_virusName")
-    collection: Optional[str] = Field(
+    collection_date: Optional[str] = Field(
         default=None, alias="cntn_collectionDate"
     )
     deprecated_catalog_number: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_dyeCatalogNumber"
     )
-    catalog_number_hcr: Optional[str] = Field(
+    catalog_number_hcr_probes: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberHcrProbes"
     )
-    catalog_number_hcr: Optional[str] = Field(
+    catalog_number_hcr_amplifiers: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberHcrAmplifiers"
     )
-    catalog_number_ex: Optional[str] = Field(
+    catalog_number_reagents: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberReagents"
     )
-    catalog_number: Optional[str] = Field(
+    catalog_number_odorants: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberOdorants"
     )
-    catalog_number: Optional[str] = Field(
+    catalog_number_antibodies: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberAntibodies"
     )
-    catalog_number: Optional[str] = Field(
+    catalog_number_dyes: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_catalogNumberDyes"
     )
     manufacturer: Optional[str] = Field(
@@ -79,34 +80,38 @@ class Content(BaseModel):
     container: Optional[str] = Field(
         default=None, alias="cntn_fk_containerContentType"
     )
-    virus: Optional[str] = Field(default=None, alias="cntn_cf_fk_virusType")
+    virus_type: Optional[str] = Field(
+        default=None, alias="cntn_cf_fk_virusType"
+    )
     accession_id: Optional[str] = Field(
         default=None, alias="cntn_cf_accessionId"
     )
-    hcr_probe: Optional[str] = Field(
+    hcr_probe_gene: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_HCRProbegene"
     )
-    antibody: Optional[str] = Field(
+    antibody_type: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_antibodyType"
     )
     subcellular_localization: Optional[str] = Field(
         default=None, alias="cntn_cf_dyeSubcellularLocalization"
     )
-    color: Optional[str] = Field(default=None, alias="cntn_cf_fk_dyeColor")
+    color_fk: Optional[str] = Field(default=None, alias="cntn_cf_fk_dyeColor")
     antibody_target: Optional[str] = Field(
         default=None, alias="cntn_cf_antibodyTarget"
     )
-    host: Optional[str] = Field(
+    host_species: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_antibodyHostSpecies"
     )
-    virus: Optional[str] = Field(
+    virus_serotype: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_virusSerotype"
     )
-    hcr: Optional[str] = Field(default=None, alias="cntn_cf_fk_hcrAmplifier")
+    hcr_amplifier: Optional[str] = Field(
+        default=None, alias="cntn_cf_fk_hcrAmplifier"
+    )
     virus_plasmid_number: Optional[str] = Field(
         default=None, alias="cntn_cf_virusPlasmidNumber"
     )
-    conjugation: Optional[str] = Field(
+    conjugation_state: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_antibodyConjugationState"
     )
     baseline_weight: Optional[Decimal] = Field(
@@ -116,10 +121,10 @@ class Content(BaseModel):
     water_restricted: Optional[bool] = Field(
         default=None, alias="cntn_cf_waterRestricted"
     )
-    hcr_probe: Optional[str] = Field(
+    hcr_probe_species: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_hcrProbeSpecies"
     )
-    clone: Optional[str] = Field(
+    antibody_clone_type: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_antibodyCloneType"
     )
     name: Optional[str] = Field(default=None, alias="cntn_id")
@@ -135,7 +140,7 @@ class Content(BaseModel):
     )
     titer: Optional[Decimal] = Field(default=None, alias="cntn_cf_titer")
     barcode: Optional[str] = Field(default=None, alias="cntn_barCode")
-    viral_injection: Optional[str] = Field(
+    viral_injection_buffer: Optional[str] = Field(
         default=None, alias="cntn_cf_fk_viralInjectionBuffer"
     )
     volume: Optional[Decimal] = Field(
@@ -155,7 +160,7 @@ class Content(BaseModel):
     intake_date: Optional[str] = Field(
         default=None, alias="cntn_cf_intakeDate"
     )
-    intake_date: Optional[str] = Field(
+    intake_date_na: Optional[str] = Field(
         default=None, alias="cntn_cf_intakeDate_NA"
     )
     expiry_date: Optional[str] = Field(
@@ -189,7 +194,7 @@ class Content(BaseModel):
     quantity: Optional[Decimal] = Field(default=None, alias="cntn_quantity")
     group: Optional[str] = Field(default=None, alias="cntn_fk_group")
     unit: Optional[str] = Field(default=None, alias="cntn_unit")
-    collection: Optional[str] = Field(
+    collection_time: Optional[str] = Field(
         default=None, alias="cntn_collectionTime"
     )
     source: Optional[str] = Field(default=None, alias="cntn_fk_source")
@@ -205,10 +210,12 @@ class Content(BaseModel):
     location_including: Optional[str] = Field(
         default=None, alias="cntn_fk_location_recursive"
     )
-    status: Optional[str] = Field(default=None, alias="cntn_fk_status")
+    status_fk: Optional[str] = Field(default=None, alias="cntn_fk_status")
     status: Optional[str] = Field(default=None, alias="cntn_status")
-    located_at: Optional[str] = Field(default=None, alias="cntn_position_row")
-    located_at: Optional[str] = Field(
+    located_at_row: Optional[str] = Field(
+        default=None, alias="cntn_position_row"
+    )
+    located_at_column: Optional[str] = Field(
         default=None, alias="cntn_position_column"
     )
     iq_field: Optional[str] = Field(default=None, alias="cntn_cf_iqField")
@@ -219,7 +226,7 @@ class Content(BaseModel):
         default=None, alias="cntn_cf_ehsBarcode"
     )
     recipe: Optional[str] = Field(default=None, alias="cntn_cf_recipe")
-    subcellular_localization: Optional[str] = Field(
+    subcellular_localization_2: Optional[str] = Field(
         default=None, alias="cntn_cf_subcellularLocalization"
     )
     external_id: Optional[str] = Field(
@@ -267,11 +274,11 @@ class ExperimentRun(BaseModel):
     signed: Optional[str] = Field(default=None, alias="xprn_signed")
     cancelled: Optional[str] = Field(default=None, alias="xprn_cancelled")
     completed: Optional[str] = Field(default=None, alias="xprn_completed")
-    completed: Optional[str] = Field(default=None, alias="xprn_completedOn")
+    completed_on: Optional[str] = Field(default=None, alias="xprn_completedOn")
     created_by: Optional[str] = Field(default=None, alias="xprn_createdBy")
     created_on: Optional[str] = Field(default=None, alias="xprn_createdOn")
-    modified: Optional[str] = Field(default=None, alias="xprn_modifiedBy")
-    modified: Optional[str] = Field(default=None, alias="xprn_modifiedOn")
+    modified_by: Optional[str] = Field(default=None, alias="xprn_modifiedBy")
+    modified_on: Optional[str] = Field(default=None, alias="xprn_modifiedOn")
     last_event: Optional[str] = Field(default=None, alias="xprn_lastEventOn")
 
 
@@ -339,12 +346,16 @@ class ExperimentRunStepContent(BaseModel):
     usage: Optional[str] = Field(default=None, alias="xrsc_usage")
     used: Optional[str] = Field(default=None, alias="xrsc_usedQuantity")
     unique: Optional[str] = Field(default=None, alias="xrsc_uniqueIdentifier")
-    content: Optional[str] = Field(default=None, alias="xrsc_contentRemoved")
-    worklist: Optional[str] = Field(default=None, alias="xrsc_workListDate")
+    content_removed: Optional[str] = Field(
+        default=None, alias="xrsc_contentRemoved"
+    )
+    worklist_date: Optional[str] = Field(
+        default=None, alias="xrsc_workListDate"
+    )
     created_by: Optional[str] = Field(default=None, alias="xrsc_createdBy")
     created_on: Optional[str] = Field(default=None, alias="xrsc_createdOn")
-    modified: Optional[str] = Field(default=None, alias="xrsc_modifiedBy")
-    modified: Optional[str] = Field(default=None, alias="xrsc_modifiedOn")
+    modified_by: Optional[str] = Field(default=None, alias="xrsc_modifiedBy")
+    modified_on: Optional[str] = Field(default=None, alias="xrsc_modifiedOn")
 
 
 class ExperimentTemplate(BaseModel):
@@ -878,9 +889,11 @@ class Result(BaseModel):
         default=None, alias="rslt_valueEnteredOn"
     )
     filler: Optional[str] = Field(default=None, alias="rslt_fk_filler")
-    status: Optional[str] = Field(default=None, alias="rslt_fk_status")
-    worklist: Optional[str] = Field(default=None, alias="rslt_fk_workList")
-    worklist: Optional[str] = Field(default=None, alias="rslt_workListDate")
+    status_fk: Optional[str] = Field(default=None, alias="rslt_fk_status")
+    worklist_fk: Optional[str] = Field(default=None, alias="rslt_fk_workList")
+    worklist_date: Optional[str] = Field(
+        default=None, alias="rslt_workListDate"
+    )
     warning: Optional[str] = Field(default=None, alias="rslt_qcWarning")
     marked: Optional[str] = Field(default=None, alias="rslt_qcMarked")
     position: Optional[str] = Field(default=None, alias="rslt_qcCardPosition")

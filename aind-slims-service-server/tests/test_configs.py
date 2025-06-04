@@ -3,7 +3,9 @@
 import os
 import unittest
 from unittest.mock import patch
+
 from pydantic import SecretStr
+
 from aind_slims_service_server.configs import Settings
 
 

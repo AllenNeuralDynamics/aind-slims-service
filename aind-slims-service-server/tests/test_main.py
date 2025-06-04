@@ -1,7 +1,8 @@
 """Module to test main app"""
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 
 class TestMain:

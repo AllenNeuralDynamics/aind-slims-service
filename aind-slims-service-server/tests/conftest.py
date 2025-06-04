@@ -1,25 +1,24 @@
 """Set up fixtures to be used across all test modules."""
 
+import json
 import os
-from pathlib import Path
 from datetime import datetime, timezone
 from decimal import Decimal
+from pathlib import Path
+from unittest.mock import MagicMock
+
+import pytest
+from fastapi.testclient import TestClient
+from slims.internal import Record
+
+from aind_slims_service_server.configs import Settings
+from aind_slims_service_server.main import app
 from aind_slims_service_server.models import (
-    SlimsEcephysData,
     EcephysRewardSpouts,
     EcephysStreamModule,
+    SlimsEcephysData,
 )
-import json
-from unittest.mock import MagicMock
-import pytest
-from slims.internal import Record
-from fastapi.testclient import TestClient
-from aind_slims_service_server.main import app
 from aind_slims_service_server.session import get_session
-from aind_slims_service_server.configs import Settings
-
-
-RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
 
 @pytest.fixture(scope="session")
@@ -36,21 +35,22 @@ def test_slims_settings():
 
 
 @pytest.fixture(scope="session")
-def ecephys_resources_dir():
-    """Fixture for the directory containing ecephys resources."""
-    return (
-        Path(os.path.dirname(os.path.realpath(__file__)))
-        / "resources"
-        / "ecephys"
-    )
+def resources_dir():
+    """Fixture to get a subdirectory under the test resources directory."""
+    base = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
+
+    def _get(subdir=None):
+        return base if subdir is None else base / subdir
+
+    return _get
 
 
 @pytest.fixture(scope="session")
-def load_ecephys_json(ecephys_resources_dir):
-    """Fixture to load JSON files from the ecephys resources directory."""
-    def _load(filename):
-        """Load a JSON file from the ecephys resources directory."""
-        with open(ecephys_resources_dir / filename, "r") as f:
+def load_json(resources_dir):
+    """Fixture to load a JSON file from any resource subdirectory."""
+
+    def _load(filename, subdir=None):
+        with open(resources_dir(subdir) / filename, "r") as f:
             return json.load(f)
 
     return _load
@@ -59,6 +59,7 @@ def load_ecephys_json(ecephys_resources_dir):
 @pytest.fixture(scope="session")
 def form_record():
     """Fixture to create a Record from a JSON entity."""
+
     def _form(json_entity):
         """Create a Record from a JSON entity."""
         return Record(json_entity=json_entity, slims_api=None)

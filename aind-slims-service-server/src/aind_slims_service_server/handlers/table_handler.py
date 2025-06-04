@@ -60,10 +60,8 @@ def get_attr_or_none(
         return None
 
 
-def parse_date(
-    date_str: Optional[str],
-) -> Union[Optional[datetime], ValueError]:
-    """Parse a date_str to datetime object or return a Bad Request response"""
+def parse_date(date_str: Optional[str]) -> Optional[datetime]:
+    """Parse a date_str to datetime object or raise a ValueError."""
     if date_str is None:
         return None
     else:

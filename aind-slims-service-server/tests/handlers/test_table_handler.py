@@ -4,12 +4,13 @@ import unittest
 from datetime import datetime, timezone
 from unittest.mock import MagicMock, patch
 
+import networkx as nx
+
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
-    parse_html,
     parse_date,
+    parse_html,
 )
-import networkx as nx
 
 
 # TODO: Add more tests
@@ -233,8 +234,8 @@ class TestSlimsTableHandler(unittest.TestCase):
             _, kwargs = mock_session.fetch.call_args
             criteria = kwargs.get("criteria")
             self.assertTrue(
-                hasattr(criteria, "to_dict") and
-                set(criteria.to_dict().get("value", [])) == {1, 2}
+                hasattr(criteria, "to_dict")
+                and set(criteria.to_dict().get("value", [])) == {1, 2}
             )
 
 

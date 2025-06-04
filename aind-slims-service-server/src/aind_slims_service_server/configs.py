@@ -1,11 +1,12 @@
 """Module for settings to connect to SLIMS backend"""
 
 import os
-from pydantic import Field, SecretStr
-from pydantic_settings import SettingsConfigDict
+
 from aind_settings_utils.aws import (
     ParameterStoreAppBaseSettings,
 )
+from pydantic import Field, SecretStr
+from pydantic_settings import SettingsConfigDict
 
 
 class Settings(ParameterStoreAppBaseSettings):
