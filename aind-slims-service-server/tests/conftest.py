@@ -40,6 +40,7 @@ def resources_dir():
     base = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
     def _get(subdir=None):
+        """Get the path to a subdirectory under the resources directory."""
         return base if subdir is None else base / subdir
 
     return _get
@@ -50,6 +51,7 @@ def load_json(resources_dir):
     """Fixture to load a JSON file from any resource subdirectory."""
 
     def _load(filename, subdir=None):
+        """Load a JSON file from the specified subdirectory."""
         with open(resources_dir(subdir) / filename, "r") as f:
             return json.load(f)
 

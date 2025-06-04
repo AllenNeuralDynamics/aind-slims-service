@@ -12,24 +12,34 @@ from aind_slims_service_server.handlers.ecephys import (
 @pytest.fixture(autouse=True)
 def setup_ecephys_data(load_json, form_record):
     """Fixture to set up ecephys data for tests."""
-    content = [form_record(j) for j in load_json("content.json", subdir="ecephys")]
+    content = [
+        form_record(j) for j in load_json("content.json", subdir="ecephys")
+    ]
     experiment_run = [
-        form_record(j) for j in load_json("experiment_run.json", subdir="ecephys")
+        form_record(j)
+        for j in load_json("experiment_run.json", subdir="ecephys")
     ]
     experiment_run_step = [
-        form_record(j) for j in load_json("experiment_run_step.json", subdir="ecephys")
+        form_record(j)
+        for j in load_json("experiment_run_step.json", subdir="ecephys")
     ]
     experiment_run_step_content = [
         form_record(j)
-        for j in load_json("experiment_run_step_content.json", subdir="ecephys")
+        for j in load_json(
+            "experiment_run_step_content.json", subdir="ecephys"
+        )
     ]
     experiment_template = [
-        form_record(j) for j in load_json("experiment_template.json", subdir="ecephys")
+        form_record(j)
+        for j in load_json("experiment_template.json", subdir="ecephys")
     ]
     reference_data_record = [
-        form_record(j) for j in load_json("reference_data_record.json", subdir="ecephys")
+        form_record(j)
+        for j in load_json("reference_data_record.json", subdir="ecephys")
     ]
-    result = [form_record(j) for j in load_json("result.json", subdir="ecephys")]
+    result = [
+        form_record(j) for j in load_json("result.json", subdir="ecephys")
+    ]
 
     return {
         "content": content,
