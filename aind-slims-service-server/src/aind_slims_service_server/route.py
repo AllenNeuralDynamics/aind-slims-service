@@ -1,12 +1,10 @@
 """Module to handle endpoint responses"""
 
-from typing import List, Optional
-
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Path
+from typing import Optional, List
 from slims.slims import Slims
-
-from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
-from aind_slims_service_server.models import HealthCheck, SlimsEcephysData
+from aind_slims_service_server.handlers.instruments import InstrumentSessionHandler
+from aind_slims_service_server.models import HealthCheck
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()
@@ -31,45 +29,27 @@ async def get_health() -> HealthCheck:
 
 
 @router.get(
-    "/ecephys_sessions",
-    response_model=List[SlimsEcephysData],
+    "/aind_instruments/{input_id}",
 )
-async def get_ecephys_sessions(
-    subject_id: Optional[str] = Query(
-        None,
-        alias="subject_id",
-        examples=["750108"],
-    ),
-    session_name: Optional[str] = Query(
-        None,
-        alias="session_name",
-        description="Name of the session",
-    ),
-    start_date_gte: Optional[str] = Query(
-        None,
-        alias="start_date_gte",
-        description="Experiment run created on or after. (ISO format)",
-    ),
-    end_date_lte: Optional[str] = Query(
-        None,
-        alias="end_date_lte",
-        description="Experiment run created on or before. (ISO format)",
+async def get_aind_instrument(
+    input_id: str = Path(..., examples=["SmartSPIM4401"]),
+    partial_match: bool = Query(
+        False,
+        description="If true, will search for a partial match that contain the input_id string",
     ),
     session: Slims = Depends(get_session),
 ):
     """
-    ## Ecephys session metadata
-    Retrieves Ecephys session information from SLIMS.
+    ## AIND instrument metadata
+    Retrieves AIND Instrument information from SLIMS.
     """
-    slims_ecephys_sessions = EcephysSessionHandler(
-        session=session
-    ).get_ephys_data_from_slims(
-        subject_id=subject_id,
-        session_name=session_name,
-        start_date_greater_than_or_equal=start_date_gte,
-        end_date_less_than_or_equal=end_date_lte,
-    )
-    if len(slims_ecephys_sessions) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return slims_ecephys_sessions
+    handler = InstrumentSessionHandler(session)
+    instrument_data = handler.get_instrument_data(input_id, partial_match)
+    if not instrument_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instrument not found",
+        )
+    return instrument_data
+
+   
