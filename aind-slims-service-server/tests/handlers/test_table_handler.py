@@ -219,7 +219,7 @@ class TestSlimsTableHandler(unittest.TestCase):
             )
 
     def test_get_attachment(self):
-        """Test _get_attachment returns the expected value from session.slims_api.get"""
+        """Test _get_attachment returns attachment"""
         mock_session = MagicMock()
         handler = SlimsTableHandler(session=mock_session)
         mock_session.slims_api.get.return_value = {"some": "data"}

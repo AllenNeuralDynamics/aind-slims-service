@@ -38,7 +38,8 @@ async def get_aind_instrument(
         False,
         description=(
             "If true, will search for a partial match"
-            " that contain the input_id string"),
+            " that contain the input_id string"
+        ),
     ),
     session: Slims = Depends(get_session),
 ):
