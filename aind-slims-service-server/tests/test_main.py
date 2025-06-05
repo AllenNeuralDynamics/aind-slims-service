@@ -1,5 +1,7 @@
 """Module to test main app"""
 
+from unittest.mock import patch
+
 import pytest
 
 
@@ -11,16 +13,16 @@ class TestMain:
         response = client.get("/healthcheck")
         assert 200 == response.status_code
 
-    def test_get_length(self, client, mock_get_example_response):
-        """Tests content route length"""
-        response = client.get("/length")
-        expected_json = {"info": "1244", "arg": "length"}
-        assert expected_json == response.json()
-        assert 200 == response.status_code
-
-    def test_get_raw(self, client, mock_get_example_response):
-        """Tests content route length"""
-        response = client.get("/raw")
+    @patch(
+        "aind_slims_service_server.handlers.instrument."
+        "InstrumentSessionHandler.get_instrument_data"
+    )
+    def test_get_aind_instrument(
+        self, mock_get_instrument, client, test_slims_instrument
+    ):
+        """Tests aind_instrument endpoint"""
+        mock_get_instrument.return_value = test_slims_instrument
+        response = client.get("/aind_instruments/SmartSPIM2-2")
         assert 200 == response.status_code
 
 

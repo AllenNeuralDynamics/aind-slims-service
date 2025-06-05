@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aind-slims-service-server"
-description = "Package to serve data from backend."
+description = "Package to serve data from SLIMS."
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
@@ -17,10 +17,12 @@ readme = "README.md"
 dynamic = ["version"]
 
 dependencies = [
-    'requests-toolbelt',  # Used for example. Remove if not needed.
     'pydantic>=2.0',
     'pydantic-settings>=2.0',
     'fastapi[standard]>=0.114.0',
+    'slims-python-api',
+    'networkx',
+    'aind-settings-utils>=0.0.3',
 ]
 
 [project.optional-dependencies]

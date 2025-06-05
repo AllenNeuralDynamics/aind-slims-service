@@ -1,10 +1,11 @@
 """Module to handle endpoint responses"""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, status
-from requests_toolbelt.sessions import BaseUrlSession
-
-from aind_slims_service_server.handler import SessionHandler
-from aind_slims_service_server.models import Content, HealthCheck
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Path
+from slims.slims import Slims
+from aind_slims_service_server.handlers.instrument import (
+    InstrumentSessionHandler,
+)
+from aind_slims_service_server.models import HealthCheck
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()
@@ -29,20 +30,27 @@ async def get_health() -> HealthCheck:
 
 
 @router.get(
-    "/{example_arg}",
-    response_model=Content,
+    "/aind_instruments/{input_id}",
 )
-async def get_content(
-    example_arg: str = Path(..., examples=["raw", "length"]),
-    session: BaseUrlSession = Depends(get_session),
+async def get_aind_instrument(
+    input_id: str = Path(..., examples=["SmartSPIM4401"]),
+    partial_match: bool = Query(
+        False,
+        description=(
+            "If true, will search for a partial match"
+            " that contain the input_id string"),
+    ),
+    session: Slims = Depends(get_session),
 ):
     """
-    ## Example content
-    Return either the raw content or the number of characters.
+    ## AIND instrument metadata
+    Retrieves AIND Instrument information from SLIMS.
     """
-    content = SessionHandler(session=session).get_info(example_arg=example_arg)
-    # Adding this for illustrative purposes.
-    if len(content.info) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return content
+    handler = InstrumentSessionHandler(session)
+    instrument_data = handler.get_instrument_data(input_id, partial_match)
+    if not instrument_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instrument not found",
+        )
+    return instrument_data
