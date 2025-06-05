@@ -14,15 +14,15 @@ class TestMain:
         assert 200 == response.status_code
 
     @patch(
-        "aind_slims_service_server.handlers.ecephys."
-        "EcephysSessionHandler.get_ephys_data_from_slims"
+        "aind_slims_service_server.handlers.instrument."
+        "InstrumentSessionHandler.get_instrument_data"
     )
-    def test_get_ecephys_sessions(
-        self, mock_get_ephys, client, test_ecephys_data
+    def test_get_aind_instrument(
+        self, mock_get_instrument, client, test_slims_instrument
     ):
-        """Tests ecephys sessions endpoint"""
-        mock_get_ephys.return_value = test_ecephys_data
-        response = client.get("/ecephys_sessions?subject_id=750108")
+        """Tests aind_instrument endpoint"""
+        mock_get_instrument.return_value = test_slims_instrument
+        response = client.get("/aind_instruments/SmartSPIM2-2")
         assert 200 == response.status_code
 
 

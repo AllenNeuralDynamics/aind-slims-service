@@ -1,6 +1,5 @@
 """Models and schema definitions for backend data structures"""
 
-from datetime import datetime
 from decimal import Decimal
 from typing import List, Literal, Optional
 
@@ -16,16 +15,14 @@ class HealthCheck(BaseModel):
     service_version: str = __version__
 
 
-def alias(model, field):
-    """Get the alias for a field from a Pydantic model."""
-    return model.model_fields[field].alias
-
 class Attachment(BaseModel):
     """Expected Attachment from SLIMS"""
 
     pk: int = Field(..., alias="attm_pk")
     name: Optional[str] = Field(default=None, alias="attm_name")
-    unique_identifier: Optional[str] = Field(default=None, alias="attm_uniqueIdentifier")
+    unique_identifier: Optional[str] = Field(
+        default=None, alias="attm_uniqueIdentifier"
+    )
     type: Optional[str] = Field(default=None, alias="attm_fk_attachmentType")
     user: Optional[str] = Field(default=None, alias="attm_fk_user")
     group: Optional[str] = Field(default=None, alias="attm_fk_group")
@@ -36,14 +33,21 @@ class Attachment(BaseModel):
     date: Optional[int] = Field(default=None, alias="attm_file_date_created")
     directory: Optional[bool] = Field(default=None, alias="attm_isDirectory")
     link_count: Optional[int] = Field(default=None, alias="attm_linkCount")
-    currently_linked: Optional[str] = Field(default=None, alias="attm_currentlyLinked")
+    currently_linked: Optional[str] = Field(
+        default=None, alias="attm_currentlyLinked"
+    )
     created_on: Optional[str] = Field(default=None, alias="attm_createdOn")
     created_by: Optional[str] = Field(default=None, alias="attm_createdBy")
     modified_on: Optional[str] = Field(default=None, alias="attm_modifiedOn")
     modified_by: Optional[str] = Field(default=None, alias="attm_modifiedBy")
     ecm_server: Optional[str] = Field(default=None, alias="attm_ecm3Url")
-    ecm_upload_user: Optional[str] = Field(default=None, alias="attm_fk_ecm3UploadUser")
-    ecm_upload_status: Optional[str] = Field(default=None, alias="attm_ecm3UploadStatus")
+    ecm_upload_user: Optional[str] = Field(
+        default=None, alias="attm_fk_ecm3UploadUser"
+    )
+    ecm_upload_status: Optional[str] = Field(
+        default=None, alias="attm_ecm3UploadStatus"
+    )
+
 
 class Content(BaseModel):
     """Expected Content from SLIMS"""

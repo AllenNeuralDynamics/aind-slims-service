@@ -6,7 +6,7 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import Any, List, Optional, Union
-
+from requests.models import Response
 from networkx import DiGraph
 from slims.criteria import (
     Criterion,
@@ -18,6 +18,7 @@ from slims.criteria import (
 )
 from slims.internal import Record
 from slims.slims import Slims
+
 
 def parse_html(v: Optional[str]) -> Optional[str]:
     """Parse link from html tag"""
@@ -31,6 +32,7 @@ def parse_html(v: Optional[str]) -> Optional[str]:
     except Exception as e:
         logging.warning(f"An exception occurred parsing link {v}: {e}")
         return None
+
 
 def get_attr_or_none(
     record: Record, field_name: str, attr_name: str = "value"
@@ -56,6 +58,7 @@ def get_attr_or_none(
         return getattr(obj_field, attr_name, None)
     else:
         return None
+
 
 class SlimsTableHandler:
     """Class to handle tables pulled from slims."""
@@ -111,11 +114,9 @@ class SlimsTableHandler:
         else:
             date_criteria = None
         return date_criteria
-    
-    def _get_attachment(self, pk: Optional[int]) -> Optional[dict]:
+
+    def _get_attachment(self, pk: int) -> Response:
         """Uses session object to get attachment by primary key."""
-        if pk is None:
-            return None
         return self.session.slims_api.get(f"repo/{pk}")
 
     # TODO: refactor this to make it simpler

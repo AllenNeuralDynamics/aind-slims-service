@@ -1,9 +1,10 @@
 """Module to handle endpoint responses"""
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Path
-from typing import Optional, List
 from slims.slims import Slims
-from aind_slims_service_server.handlers.instruments import InstrumentSessionHandler
+from aind_slims_service_server.handlers.instrument import (
+    InstrumentSessionHandler,
+)
 from aind_slims_service_server.models import HealthCheck
 from aind_slims_service_server.session import get_session
 
@@ -35,7 +36,9 @@ async def get_aind_instrument(
     input_id: str = Path(..., examples=["SmartSPIM4401"]),
     partial_match: bool = Query(
         False,
-        description="If true, will search for a partial match that contain the input_id string",
+        description=(
+            "If true, will search for a partial match"
+            " that contain the input_id string"),
     ),
     session: Slims = Depends(get_session),
 ):
@@ -51,5 +54,3 @@ async def get_aind_instrument(
             detail="Instrument not found",
         )
     return instrument_data
-
-   

@@ -8,7 +8,6 @@ import networkx as nx
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
-    parse_date,
     parse_html,
 )
 
@@ -100,25 +99,6 @@ class TestSlimsTableHandler(unittest.TestCase):
         output = parse_html(123)  # type: ignore
         self.assertIsNone(output)
         mock_log_warn.assert_called_once()
-
-    def test_parse_date(self):
-        """Tests _parse_date method"""
-
-        dt = parse_date(date_str="2025-02-10T00:00:00")
-        expected_dt = datetime(2025, 2, 10)
-        self.assertEqual(expected_dt, dt)
-
-    def test_parse_date_none(self):
-        """Tests _parse_date method when input is None"""
-
-        dt = parse_date(date_str=None)
-        self.assertIsNone(dt)
-
-    def test_parse_date_invalid(self):
-        """Tests _parse_date method when input is invalid"""
-
-        with self.assertRaises(ValueError):
-            parse_date(date_str="not-a-date")
 
     def test_update_graph_with_foreign_table_pk_list(self):
         """Tests _update_graph with foreign table
@@ -237,6 +217,17 @@ class TestSlimsTableHandler(unittest.TestCase):
                 hasattr(criteria, "to_dict")
                 and set(criteria.to_dict().get("value", [])) == {1, 2}
             )
+
+    def test_get_attachment(self):
+        """Test _get_attachment returns the expected value from session.slims_api.get"""
+        mock_session = MagicMock()
+        handler = SlimsTableHandler(session=mock_session)
+        mock_session.slims_api.get.return_value = {"some": "data"}
+
+        pk = 123
+        result = handler._get_attachment(pk)
+        mock_session.slims_api.get.assert_called_once_with("repo/123")
+        self.assertEqual(result, {"some": "data"})
 
 
 if __name__ == "__main__":

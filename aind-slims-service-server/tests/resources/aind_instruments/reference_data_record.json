@@ -1,0 +1,108 @@
+[
+    {
+        "pk": 40,
+        "tableName": "ReferenceDataRecord",
+        "columns": [
+            {
+                "datatype": "STRING",
+                "name": "rdrc_name",
+                "title": "Name",
+                "value": "SmartSPIM2-2"
+            },
+            {
+                "datatype": "STRING",
+                "name": "rdrc_uniqueIdentifier",
+                "title": "Unique identifier",
+                "value": "rdrc_aind_instruments_smartspim2-2"
+            },
+            {
+                "datatype": "BOOLEAN",
+                "name": "rdrc_active",
+                "title": "Active",
+                "value": true
+            },
+            {
+                "datatype": "FOREIGN_KEY",
+                "name": "rdrc_fk_user",
+                "title": "User",
+                "value": null,
+                "foreignTable": "User",
+                "displayValue": null
+            },
+            {
+                "datatype": "FOREIGN_KEY",
+                "name": "rdrc_fk_group",
+                "title": "Group",
+                "value": null,
+                "foreignTable": "Groups",
+                "displayValue": null
+            },
+            {
+                "datatype": "FOREIGN_KEY",
+                "name": "rdrc_cf_fk_instrument",
+                "title": "Instrument",
+                "value": 1,
+                "foreignTable": "Instrument",
+                "displayValue": "SmartSPIM2-2"
+            },
+            {
+                "datatype": "FOREIGN_KEY",
+                "name": "rdrc_cf_instrumentJsonAttachment",
+                "title": "Instrument JSON attachment",
+                "value": 5,
+                "foreignTable": "Attachment",
+                "displayValue": "SmartSPIM2-2_instrument.json"
+            },
+            {
+                "datatype": "FOREIGN_KEY",
+                "name": "rdrc_fk_referenceDataType",
+                "title": "Reference Data Type",
+                "value": 4,
+                "foreignTable": "ReferenceDataType",
+                "displayValue": "AIND Instruments"
+            },
+            {
+                "datatype": "STRING",
+                "name": "rdrc_createdBy",
+                "title": "Created by",
+                "value": "UserName"
+            },
+            {
+                "datatype": "DATE",
+                "name": "rdrc_createdOn",
+                "title": "Created on",
+                "value": 1717013498541,
+                "dateFormat": "MM/dd/yyyy HH:mm:ss",
+                "subType": "datetime",
+                "timeZone": "America/Los_Angeles"
+            },
+            {
+                "datatype": "STRING",
+                "name": "rdrc_modifiedBy",
+                "title": "Modified by",
+                "value": "UserName"
+            },
+            {
+                "datatype": "DATE",
+                "name": "rdrc_modifiedOn",
+                "title": "Modified on",
+                "value": 1717013498541,
+                "dateFormat": "MM/dd/yyyy HH:mm:ss",
+                "subType": "datetime",
+                "timeZone": "America/Los_Angeles"
+            },
+            {
+                "datatype": "INTEGER",
+                "name": "attachmentCount",
+                "title": "attachmentCount",
+                "value": 1
+            },
+            {
+                "datatype": "INTEGER",
+                "name": "rdrc_pk",
+                "title": "rdrc_pk",
+                "value": 40
+            }
+        ]
+    }
+]
