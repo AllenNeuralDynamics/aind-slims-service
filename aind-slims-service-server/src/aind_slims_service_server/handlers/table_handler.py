@@ -128,7 +128,7 @@ class SlimsTableHandler:
         else:
             date_criteria = None
         return date_criteria
-    
+
     @staticmethod
     def alias(model: BaseModel, field: str) -> str:
         """

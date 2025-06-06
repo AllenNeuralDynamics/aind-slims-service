@@ -15,6 +15,7 @@ class HealthCheck(BaseModel):
     status: Literal["OK"] = "OK"
     service_version: str = __version__
 
+
 class Content(BaseModel):
     """Expected Content from SLIMS"""
 

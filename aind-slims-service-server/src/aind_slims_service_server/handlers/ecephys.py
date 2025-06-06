@@ -28,7 +28,6 @@ from aind_slims_service_server.models import (
 class EcephysSessionHandler(SlimsTableHandler):
     """Class to handle getting Ephys Session info from SLIMS."""
 
-
     def _get_stream_module_data(self, row: Record) -> EcephysStreamModule:
         """Parses a stream module info from a SLIMS row."""
         arc_angle = get_attr_or_none(
@@ -87,7 +86,9 @@ class EcephysSessionHandler(SlimsTableHandler):
             ),
             secondary_target_structures=get_attr_or_none(
                 row,
-                self.alias(ReferenceDataRecord, "secondary_targeted_structures"),
+                self.alias(
+                    ReferenceDataRecord, "secondary_targeted_structures"
+                ),
                 "displayValues",
             ),
             arc_angle=(None if arc_angle is None else Decimal(str(arc_angle))),
@@ -120,7 +121,9 @@ class EcephysSessionHandler(SlimsTableHandler):
                 else Decimal(str(ccf_coordinate_dv))
             ),
             ccf_coordinate_unit=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "ccf_coordinates_ap"), "unit"
+                row,
+                self.alias(ReferenceDataRecord, "ccf_coordinates_ap"),
+                "unit",
             ),
             ccf_version=get_attr_or_none(
                 row, self.alias(ReferenceDataRecord, "ccf_version")
@@ -141,7 +144,9 @@ class EcephysSessionHandler(SlimsTableHandler):
                 else Decimal(str(bregma_target_dv))
             ),
             bregma_target_unit=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "bregma_target_ap"), "unit"
+                row,
+                self.alias(ReferenceDataRecord, "bregma_target_ap"),
+                "unit",
             ),
             surface_z=(None if surface_z is None else Decimal(str(surface_z))),
             surface_z_unit=get_attr_or_none(
@@ -180,8 +185,9 @@ class EcephysSessionHandler(SlimsTableHandler):
 
     def _handle_content(self, ephys_data: SlimsEcephysData, row: Record):
         """Handles the content table."""
-        ephys_data.subject_id = get_attr_or_none(row, self.alias(Content, "name"))
-
+        ephys_data.subject_id = get_attr_or_none(
+            row, self.alias(Content, "name")
+        )
 
     def _handle_experimentrunstep(
         self, ephys_data: SlimsEcephysData, row: Record
@@ -207,12 +213,13 @@ class EcephysSessionHandler(SlimsTableHandler):
             row, self.alias(ExperimentRunStep, "active_mouse_platform")
         )
         ephys_data.instrument = get_attr_or_none(
-            row, self.alias(ExperimentRunStep, "instrument_dynamic"), "displayValue"
+            row,
+            self.alias(ExperimentRunStep, "instrument_dynamic"),
+            "displayValue",
         )
         ephys_data.device_calibrations = get_attr_or_none(
             row, self.alias(ExperimentRunStep, "device_calibrations")
         )
-
 
     def _handle_result(self, ephys_data: SlimsEcephysData, row: Record):
         """Handles the result table."""
@@ -274,7 +281,9 @@ class EcephysSessionHandler(SlimsTableHandler):
     ):
         """Handles the reference data record table."""
         ref_type = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "reference_data"), "displayValue"
+            row,
+            self.alias(ReferenceDataRecord, "reference_data"),
+            "displayValue",
         )
         if ref_type == "Reward Delivery":
             ephys_data.reward_solution = get_attr_or_none(
