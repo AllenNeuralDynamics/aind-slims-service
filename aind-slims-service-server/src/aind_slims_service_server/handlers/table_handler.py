@@ -6,7 +6,7 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import Any, List, Optional, Union
-
+from pydantic import BaseModel
 from networkx import DiGraph
 from slims.criteria import (
     Criterion,
@@ -128,6 +128,19 @@ class SlimsTableHandler:
         else:
             date_criteria = None
         return date_criteria
+    
+    @staticmethod
+    def alias(model: BaseModel, field: str) -> str:
+        """
+        Get the alias for a field from a Pydantic model.
+        Parameters
+        ----------
+        model : Pydantic model
+          The Pydantic model class to get the field alias from.
+        field : str
+            The field name to get the alias for.
+        """
+        return model.model_fields[field].alias
 
     # TODO: refactor this to make it simpler
     @staticmethod

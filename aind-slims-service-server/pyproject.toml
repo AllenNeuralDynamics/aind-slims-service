@@ -92,5 +92,8 @@ fail-under = 100
 asyncio_mode="auto"
 asyncio_default_fixture_loop_scope="function"
 env = [
-    "MYENV_HOST=example"
+    "SLIMS_USERNAME=slims_user",
+    "SLIMS_PASSWORD=slims_password",
+    "SLIMS_HOST=slims_host",
+    "SLIMS_DB=slims_db"
 ]

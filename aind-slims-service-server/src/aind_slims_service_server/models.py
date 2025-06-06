@@ -15,12 +15,6 @@ class HealthCheck(BaseModel):
     status: Literal["OK"] = "OK"
     service_version: str = __version__
 
-
-def alias(model, field):
-    """Get the alias for a field from a Pydantic model."""
-    return model.model_fields[field].alias
-
-
 class Content(BaseModel):
     """Expected Content from SLIMS"""
 
@@ -474,7 +468,7 @@ class ReferenceDataRecord(BaseModel):
     host_species: Optional[int] = Field(
         default=None, alias="rdrc_cf_fk_antibodyHostSpecies"
     )
-    color: Optional[int] = Field(default=None, alias="rdrc_cf_fk_dyeColor")
+    dye_color: Optional[int] = Field(default=None, alias="rdrc_cf_fk_dyeColor")
     amplifier: Optional[int] = Field(
         default=None, alias="rdrc_cf_fk_HCRamplifier"
     )
@@ -599,7 +593,7 @@ class ReferenceDataRecord(BaseModel):
     patch_cord_name: Optional[str] = Field(
         default=None, alias="rdrc_cf_patchCordName"
     )
-    funding_source: Optional[int] = Field(
+    funding_source_pk: Optional[int] = Field(
         default=None, alias="rdrc_cf_fk_fundingSource"
     )
     safe_name: Optional[str] = Field(default=None, alias="rdrc_cf_safeName")
