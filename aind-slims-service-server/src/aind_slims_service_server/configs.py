@@ -1,7 +1,5 @@
 """Module for settings to connect to SLIMS backend"""
 
-import os
-
 from aind_settings_utils.aws import (
     ParameterStoreAppBaseSettings,
 )

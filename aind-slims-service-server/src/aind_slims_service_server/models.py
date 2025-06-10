@@ -886,7 +886,9 @@ class Result(BaseModel):
     marked: Optional[str] = Field(default=None, alias="rslt_qcMarked")
     position: Optional[str] = Field(default=None, alias="rslt_qcCardPosition")
     is_a_repeat: Optional[str] = Field(default=None, alias="rslt_isARepeat")
-    is_repeated: Optional[str] = Field(default=None, alias="rslt_isRepeated")
+    is_repeated: Optional[str] = Field(
+        default=None, alias="rslt_isRepeated"
+    )
     report: Optional[str] = Field(default=None, alias="rslt_report")
     created_by: Optional[str] = Field(default=None, alias="rslt_createdBy")
     created_on: Optional[str] = Field(default=None, alias="rslt_createdOn")

@@ -10,20 +10,21 @@ from typing import Any, Generator
 import pytest
 from fastapi.testclient import TestClient
 from slims.internal import Record
-
-from aind_slims_service_server.configs import Settings
 from aind_slims_service_server.main import app
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
     EcephysStreamModule,
     SlimsEcephysData,
 )
-from aind_slims_service_server.session import get_session
 from pytest_mock import MockFixture
 
-RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources" / "ecephys"
+RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
-def mock_slims_fetch(mocker: MockFixture, table_to_file: dict, resources_dir: Path = RESOURCES_DIR) -> MagicMock:
+
+def mock_slims_fetch(
+    mocker: MockFixture, table_to_file: dict,
+    resources_dir: Path = RESOURCES_DIR
+) -> MagicMock:
     """
     Patch slims session.fetch to return records from resource files.
     Returns the MagicMock session.
@@ -37,14 +38,14 @@ def mock_slims_fetch(mocker: MockFixture, table_to_file: dict, resources_dir: Pa
             records = json.load(f)
         return [Record(json_entity=j, slims_api=None) for j in records]
 
-    # TODO: it should be mock_get and patch the slims api fetch method
-    mock_session = MagicMock()
-    mock_session.fetch.side_effect = fetch_side_effect
-    mocker.patch("slims.slims.Slims", return_value=mock_session)
-    return mock_session
+    mock_get = mocker.patch("slims.slims.Slims.fetch")
+    mock_get.side_effect = fetch_side_effect
+    return mock_get
+
 
 @pytest.fixture()
 def mock_get_ecephys_data(mocker):
+    """Expected raw ecephys data."""
     table_to_file = {
         "Content": "content.json",
         "ExperimentRun": "experiment_run.json",
@@ -54,7 +55,8 @@ def mock_get_ecephys_data(mocker):
         "ReferenceDataRecord": "reference_data_record.json",
         "Result": "result.json",
     }
-    return mock_slims_fetch(mocker, table_to_file, RESOURCES_DIR/"ecephys")
+    return mock_slims_fetch(mocker, table_to_file, RESOURCES_DIR / "ecephys")
+
 
 @pytest.fixture(scope="session")
 def test_ecephys_data():
@@ -128,6 +130,7 @@ def test_ecephys_data():
             ],
         )
     ]
+
 
 @pytest.fixture(scope="session")
 def client() -> Generator[TestClient, Any, None]:

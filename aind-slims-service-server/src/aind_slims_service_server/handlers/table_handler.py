@@ -259,7 +259,7 @@ class SlimsTableHandler:
                         key_values = {key_values}
                     sets_of_foreign_keys[fk_name] = sets_of_foreign_keys[
                         fk_name
-                    ].union(key_values)
+                        ].union(key_values)
         total_fks = set()
         for v in sets_of_foreign_keys.values():
             total_fks = total_fks.union(v)

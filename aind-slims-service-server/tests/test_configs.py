@@ -18,9 +18,9 @@ class TestSettings(unittest.TestCase):
             "SLIMS_USERNAME": "slims_user",
             "SLIMS_PASSWORD": "slims_password",
             "SLIMS_HOST": "slims_host",
-            "SLIMS_DB": "slims_db"
+            "SLIMS_DB": "slims_db",
         },
-            clear=True
+        clear=True,
     )
     def test_get_settings(self):
         """Tests settings can be set via env vars"""
@@ -29,7 +29,7 @@ class TestSettings(unittest.TestCase):
             username="slims_user",
             password=SecretStr("slims_password"),
             host="slims_host",
-            db="slims_db"
+            db="slims_db",
         )
         assert settings == expected_settings
 

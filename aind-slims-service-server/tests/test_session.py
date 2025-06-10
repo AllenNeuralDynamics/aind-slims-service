@@ -11,11 +11,8 @@ class TestSession:
         """Tests get_session method."""
 
         session = next(get_session())
-        assert(
-            "slims_password"
-            == session.slims_api.password
-        )
-        
+        assert "slims_password" == session.slims_api.password
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

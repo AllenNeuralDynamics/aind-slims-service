@@ -91,13 +91,16 @@ class EcephysSessionHandler(SlimsTableHandler):
                 ),
                 "displayValues",
             ),
-            arc_angle=(None if arc_angle is None else Decimal(str(arc_angle))),
+            arc_angle=(
+                None if arc_angle is None
+                else Decimal(str(arc_angle))
+            ),
             module_angle=(
-                None if module_angle is None else Decimal(str(module_angle))
+                None if module_angle is None
+                else Decimal(str(module_angle))
             ),
             rotation_angle=(
-                None
-                if rotation_angle is None
+                None if rotation_angle is None
                 else Decimal(str(rotation_angle))
             ),
             coordinate_transform=get_attr_or_none(
@@ -106,18 +109,15 @@ class EcephysSessionHandler(SlimsTableHandler):
                 "displayValue",
             ),
             ccf_coordinate_ap=(
-                None
-                if ccf_coordinate_ap is None
+                None if ccf_coordinate_ap is None
                 else Decimal(str(ccf_coordinate_ap))
             ),
             ccf_coordinate_ml=(
-                None
-                if ccf_coordinate_ml is None
+                None if ccf_coordinate_ml is None
                 else Decimal(str(ccf_coordinate_ml))
             ),
             ccf_coordinate_dv=(
-                None
-                if ccf_coordinate_dv is None
+                None if ccf_coordinate_dv is None
                 else Decimal(str(ccf_coordinate_dv))
             ),
             ccf_coordinate_unit=get_attr_or_none(
@@ -129,18 +129,15 @@ class EcephysSessionHandler(SlimsTableHandler):
                 row, self.alias(ReferenceDataRecord, "ccf_version")
             ),
             bregma_target_ap=(
-                None
-                if bregma_target_ap is None
+                None if bregma_target_ap is None
                 else Decimal(str(bregma_target_ap))
             ),
             bregma_target_ml=(
-                None
-                if bregma_target_ml is None
+                None if bregma_target_ml is None
                 else Decimal(str(bregma_target_ml))
             ),
             bregma_target_dv=(
-                None
-                if bregma_target_dv is None
+                None if bregma_target_dv is None
                 else Decimal(str(bregma_target_dv))
             ),
             bregma_target_unit=get_attr_or_none(
@@ -190,7 +187,7 @@ class EcephysSessionHandler(SlimsTableHandler):
         )
 
     def _handle_experimentrunstep(
-        self, ephys_data: SlimsEcephysData, row: Record
+            self, ephys_data: SlimsEcephysData, row: Record
     ):
         """Handles the experiment run step table."""
         if (
@@ -251,8 +248,7 @@ class EcephysSessionHandler(SlimsTableHandler):
                 row, self.alias(Result, "reward_consumed")
             )
             ephys_data.reward_consumed = (
-                None
-                if reward_consumed is None
+                None if reward_consumed is None
                 else Decimal(str(reward_consumed))
             )
             ephys_data.reward_consumed_unit = get_attr_or_none(
@@ -277,7 +273,7 @@ class EcephysSessionHandler(SlimsTableHandler):
             )
 
     def _handle_referencedatarecord(
-        self, ephys_data: SlimsEcephysData, row: Record
+            self, ephys_data: SlimsEcephysData, row: Record
     ):
         """Handles the reference data record table."""
         ref_type = get_attr_or_none(
@@ -339,7 +335,7 @@ class EcephysSessionHandler(SlimsTableHandler):
                     table_handler(ephys_data, row)
             if (
                 subject_id is None or subject_id == ephys_data.subject_id
-            ) and (
+                ) and (
                 session_name is None or session_name == ephys_data.session_name
             ):
                 ephys_data_list.append(

@@ -13,7 +13,6 @@ from aind_slims_service_server.handlers.table_handler import (
 )
 
 
-# TODO: Add more tests
 class TestSlimsTableHandler(unittest.TestCase):
     """Test class for SlimsTableHandler"""
 
