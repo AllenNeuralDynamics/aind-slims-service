@@ -44,8 +44,6 @@ def mock_slims_fetch(
     def fetch_side_effect(table, *args, **kwargs):
         """Side effect for the mock fetch method."""
         filename = table_to_file.get(table)
-        if not filename:
-            return []
         with open(resources_dir / filename) as f:
             records = json.load(f)
         return [Record(json_entity=j, slims_api=None) for j in records]
