@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from unittest.mock import MagicMock
-
+from typing import Any, Generator
 import pytest
 from fastapi.testclient import TestClient
 from slims.internal import Record
@@ -19,69 +19,42 @@ from aind_slims_service_server.models import (
     SlimsEcephysData,
 )
 from aind_slims_service_server.session import get_session
+from pytest_mock import MockFixture
 
+RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources" / "ecephys"
 
-@pytest.fixture(scope="session")
-def test_slims_settings():
-    """Fixture for a test Settings object."""
-    settings = MagicMock(spec=Settings)
-    settings.db = "test_db"
-    settings.username = "user"
-    password_mock = MagicMock()
-    password_mock.get_secret_value.return_value = "pass"
-    settings.password = password_mock
-    settings.host = "http://localhost"
-    return settings
+def mock_slims_fetch(mocker: MockFixture, table_to_file: dict, resources_dir: Path = RESOURCES_DIR) -> MagicMock:
+    """
+    Patch slims session.fetch to return records from resource files.
+    Returns the MagicMock session.
+    """
 
+    def fetch_side_effect(table, *args, **kwargs):
+        filename = table_to_file.get(table)
+        if not filename:
+            return []
+        with open(resources_dir / filename) as f:
+            records = json.load(f)
+        return [Record(json_entity=j, slims_api=None) for j in records]
 
-@pytest.fixture(scope="session")
-def resources_dir():
-    """Fixture to get a subdirectory under the test resources directory."""
-    base = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
+    # TODO: it should be mock_get and patch the slims api fetch method
+    mock_session = MagicMock()
+    mock_session.fetch.side_effect = fetch_side_effect
+    mocker.patch("slims.slims.Slims", return_value=mock_session)
+    return mock_session
 
-    def _get(subdir=None):
-        """Get the path to a subdirectory under the resources directory."""
-        return base if subdir is None else base / subdir
-
-    return _get
-
-
-@pytest.fixture(scope="session")
-def load_json(resources_dir):
-    """Fixture to load a JSON file from any resource subdirectory."""
-
-    def _load(filename, subdir=None):
-        """Load a JSON file from the specified subdirectory."""
-        with open(resources_dir(subdir) / filename, "r") as f:
-            return json.load(f)
-
-    return _load
-
-
-@pytest.fixture(scope="session")
-def form_record():
-    """Fixture to create a Record from a JSON entity."""
-
-    def _form(json_entity):
-        """Create a Record from a JSON entity."""
-        return Record(json_entity=json_entity, slims_api=None)
-
-    return _form
-
-
-@pytest.fixture(scope="session")
-def client(test_slims_settings):
-    """Fixture to create a TestClient with overridden session."""
-
-    def override_get_session():
-        """Override get_session to use the test settings."""
-        yield from get_session(settings=test_slims_settings)
-
-    app.dependency_overrides[get_session] = override_get_session
-    with TestClient(app, raise_server_exceptions=False) as c:
-        yield c
-    app.dependency_overrides.clear()
-
+@pytest.fixture()
+def mock_get_ecephys_data(mocker):
+    table_to_file = {
+        "Content": "content.json",
+        "ExperimentRun": "experiment_run.json",
+        "ExperimentRunStep": "experiment_run_step.json",
+        "ExperimentRunStepContent": "experiment_run_step_content.json",
+        "ExperimentTemplate": "experiment_template.json",
+        "ReferenceDataRecord": "reference_data_record.json",
+        "Result": "result.json",
+    }
+    return mock_slims_fetch(mocker, table_to_file, RESOURCES_DIR/"ecephys")
 
 @pytest.fixture(scope="session")
 def test_ecephys_data():
@@ -155,3 +128,10 @@ def test_ecephys_data():
             ],
         )
     ]
+
+@pytest.fixture(scope="session")
+def client() -> Generator[TestClient, Any, None]:
+    """Creating a client for testing purposes."""
+
+    with TestClient(app) as c:
+        yield c
