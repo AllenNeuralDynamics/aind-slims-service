@@ -27,10 +27,22 @@ def mock_slims_fetch(
 ) -> MagicMock:
     """
     Patch slims session.fetch to return records from resource files.
-    Returns the MagicMock session.
+    Parameters:
+    ----------
+    mocker: MockFixture
+        The pytest-mock fixture to patch methods.
+    table_to_file: dict
+        A dictionary mapping SLIMS table names to corresponding JSON files.
+    resources_dir: Path
+        The directory where the resource files are located.
+    Returns:
+    -------
+    MagicMock
+        A mock object that simulates the fetch method of the Slims class.
     """
 
     def fetch_side_effect(table, *args, **kwargs):
+        """Side effect for the mock fetch method."""
         filename = table_to_file.get(table)
         if not filename:
             return []
@@ -46,6 +58,7 @@ def mock_slims_fetch(
 @pytest.fixture()
 def mock_get_ecephys_data(mocker):
     """Expected raw ecephys data."""
+
     table_to_file = {
         "Content": "content.json",
         "ExperimentRun": "experiment_run.json",
