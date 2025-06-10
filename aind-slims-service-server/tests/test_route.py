@@ -6,18 +6,14 @@ import pytest
 from starlette.testclient import TestClient
 
 
-class TestHealthcheckRoute:
-    """Test healthcheck responses."""
+class TestRoutes:
+    """Test all API routes."""
 
     def test_get_health(self, client):
         """Tests a good response"""
         response = client.get("/healthcheck")
         assert response.status_code == 200
         assert response.json()["status"] == "OK"
-
-
-class TestEcephysSessionsRoute:
-    """Test ecephys sessions responses."""
 
     def test_get_200_ecephys_sessions(
         self, client: TestClient, mock_get_ecephys_data: MagicMock

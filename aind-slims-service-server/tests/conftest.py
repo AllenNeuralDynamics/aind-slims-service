@@ -54,7 +54,7 @@ def mock_slims_fetch(
 
 
 @pytest.fixture()
-def mock_get_ecephys_data(mocker):
+def mock_get_ecephys_data(mocker: MockFixture) -> MagicMock:
     """Expected raw ecephys data."""
 
     table_to_file = {
