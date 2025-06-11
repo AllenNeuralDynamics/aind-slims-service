@@ -8,11 +8,9 @@ import networkx as nx
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
-    parse_html,
 )
 
 
-# TODO: Add more tests
 class TestSlimsTableHandler(unittest.TestCase):
     """Test class for SlimsTableHandler"""
 
@@ -72,33 +70,52 @@ class TestSlimsTableHandler(unittest.TestCase):
     def test_parse_html(self):
         """Tests parse html"""
         protocol_html = '<a href="https://example.com">Example</a>'
-        output = parse_html(protocol_html)
+        output = SlimsTableHandler.parse_html(protocol_html)
         self.assertEqual("https://example.com", output)
 
     def test_parse_malformed_html(self):
         """Tests parse_html when malformed string"""
         protocol_html = "<a>Missing Href</a>"
-        output = parse_html(protocol_html)
+        output = SlimsTableHandler.parse_html(protocol_html)
         self.assertIsNone(output)
 
     def test_parse_non_html(self):
         """Tests parse_html when regular string passed in"""
         protocol_html = "Not in HTML"
-        output = parse_html(protocol_html)
+        output = SlimsTableHandler.parse_html(protocol_html)
         self.assertEqual("Not in HTML", output)
 
     def test_parse_html_none(self):
         """Tests parse_html when None passed in"""
-        output = parse_html(None)
+        output = SlimsTableHandler.parse_html(None)
         self.assertIsNone(output)
 
     @patch("logging.warning")
     def test_parse_error(self, mock_log_warn: MagicMock):
         """Tests parse_html when regular string passed in"""
 
-        output = parse_html(123)  # type: ignore
+        output = SlimsTableHandler.parse_html(123)  # type: ignore
         self.assertIsNone(output)
         mock_log_warn.assert_called_once()
+
+    def test_parse_date(self):
+        """Tests _parse_date method"""
+
+        dt = SlimsTableHandler.parse_date(date_str="2025-02-10T00:00:00")
+        expected_dt = datetime(2025, 2, 10)
+        self.assertEqual(expected_dt, dt)
+
+    def test_parse_date_none(self):
+        """Tests _parse_date method when input is None"""
+
+        dt = SlimsTableHandler.parse_date(date_str=None)
+        self.assertIsNone(dt)
+
+    def test_parse_date_invalid(self):
+        """Tests _parse_date method when input is invalid"""
+
+        with self.assertRaises(ValueError):
+            SlimsTableHandler.parse_date(date_str="not-a-date")
 
     def test_update_graph_with_foreign_table_pk_list(self):
         """Tests _update_graph with foreign table
@@ -125,12 +142,14 @@ class TestSlimsTableHandler(unittest.TestCase):
         input_row.table_name.return_value = input_table
         input_row.pk.return_value = 100
 
-        with patch(
-            "aind_slims_service_server.handlers.table_handler."
+        mock_session = MagicMock()
+        handler = SlimsTableHandler(session=mock_session)
+        with patch.object(
+            SlimsTableHandler,
             "get_attr_or_none",
             return_value=[1, 2],
         ):
-            SlimsTableHandler._update_graph(
+            handler._update_graph(
                 foreign_table=foreign_table,
                 foreign_rows=foreign_rows,
                 foreign_table_col=foreign_table_col,
@@ -151,8 +170,8 @@ class TestSlimsTableHandler(unittest.TestCase):
         mock_session = MagicMock()
         handler = SlimsTableHandler(session=mock_session)
         input_row = MagicMock()
-        with patch(
-            "aind_slims_service_server.handlers.table_handler."
+        with patch.object(
+            SlimsTableHandler,
             "get_attr_or_none",
             return_value=None,
         ):
@@ -171,8 +190,8 @@ class TestSlimsTableHandler(unittest.TestCase):
         mock_session = MagicMock()
         handler = SlimsTableHandler(session=mock_session)
         input_row = MagicMock()
-        with patch(
-            "aind_slims_service_server.handlers.table_handler."
+        with patch.object(
+            SlimsTableHandler,
             "get_attr_or_none",
             return_value=42,
         ):
@@ -198,8 +217,8 @@ class TestSlimsTableHandler(unittest.TestCase):
         mock_session = MagicMock()
         handler = SlimsTableHandler(session=mock_session)
         input_row = MagicMock()
-        with patch(
-            "aind_slims_service_server.handlers.table_handler."
+        with patch.object(
+            SlimsTableHandler,
             "get_attr_or_none",
             side_effect=[[1, 2], [1, 2]],
         ):
@@ -217,17 +236,6 @@ class TestSlimsTableHandler(unittest.TestCase):
                 hasattr(criteria, "to_dict")
                 and set(criteria.to_dict().get("value", [])) == {1, 2}
             )
-
-    def test_get_attachment(self):
-        """Test _get_attachment returns attachment"""
-        mock_session = MagicMock()
-        handler = SlimsTableHandler(session=mock_session)
-        mock_session.slims_api.get.return_value = {"some": "data"}
-
-        pk = 123
-        result = handler._get_attachment(pk)
-        mock_session.slims_api.get.assert_called_once_with("repo/123")
-        self.assertEqual(result, {"some": "data"})
 
 
 if __name__ == "__main__":
