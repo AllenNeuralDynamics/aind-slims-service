@@ -10,6 +10,8 @@ from slims.internal import Record
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
+    get_attr_or_none,
+    parse_date
 )
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
@@ -420,10 +422,10 @@ class EcephysSessionHandler(SlimsTableHandler):
             raise ValueError("subject_id must not be empty!")
 
         G, root_nodes = self._get_graph(
-            start_date_greater_than_or_equal=self.parse_date(
+            start_date_greater_than_or_equal=parse_date(
                 start_date_greater_than_or_equal
             ),
-            end_date_less_than_or_equal=self.parse_date(
+            end_date_less_than_or_equal=parse_date(
                 end_date_less_than_or_equal
             ),
         )
