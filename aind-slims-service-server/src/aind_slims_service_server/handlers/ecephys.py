@@ -10,8 +10,6 @@ from slims.internal import Record
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
-    get_attr_or_none,
-    parse_date,
 )
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
@@ -128,12 +126,14 @@ class EcephysSessionHandler(SlimsTableHandler):
             ),
         )
 
-    def _handle_content(self, ephys_data: SlimsEcephysData, row: Record):
+    @staticmethod
+    def _handle_content(ephys_data: SlimsEcephysData, row: Record):
         """Handles the content table."""
         ephys_data.subject_id = get_attr_or_none(row, "cntn_barCode")
 
+    @staticmethod
     def _handle_experimentrunstep(
-        self, ephys_data: SlimsEcephysData, row: Record
+        ephys_data: SlimsEcephysData, row: Record
     ):
         """Handles the experiment run step table."""
         if get_attr_or_none(row, "xprs_name") != "Group of Sessions":
@@ -155,7 +155,8 @@ class EcephysSessionHandler(SlimsTableHandler):
             row, "xprs_cf_deviceCalibrations"
         )
 
-    def _handle_result(self, ephys_data: SlimsEcephysData, row: Record):
+    @staticmethod
+    def _handle_result(ephys_data: SlimsEcephysData, row: Record):
         """Handles the result table."""
         label = get_attr_or_none(row, "test_label")
         if label == "Mouse Session":
@@ -419,10 +420,10 @@ class EcephysSessionHandler(SlimsTableHandler):
             raise ValueError("subject_id must not be empty!")
 
         G, root_nodes = self._get_graph(
-            start_date_greater_than_or_equal=parse_date(
+            start_date_greater_than_or_equal=self.parse_date(
                 start_date_greater_than_or_equal
             ),
-            end_date_less_than_or_equal=parse_date(
+            end_date_less_than_or_equal=self.parse_date(
                 end_date_less_than_or_equal
             ),
         )
