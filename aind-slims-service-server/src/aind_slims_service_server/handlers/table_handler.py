@@ -19,60 +19,6 @@ from slims.internal import Record
 from slims.slims import Slims
 
 
-def parse_html(v: Optional[str]) -> Optional[str]:
-    """Parse link from html tag"""
-    if v is None:
-        return None
-    try:
-        root = ET.fromstring(v)
-        return root.get("href")
-    except ET.ParseError:
-        return v
-    except Exception as e:
-        logging.warning(f"An exception occurred parsing link {v}: {e}")
-        return None
-
-
-def get_attr_or_none(
-    record: Record, field_name: str, attr_name: str = "value"
-) -> Optional[Any]:
-    """
-    Get a column attribute for a record at the field name. If the record does
-    not have the field then return None.
-    Parameters
-    ----------
-    record : Record
-    field_name : str
-    attr_name : str
-      Column attribute. Default is "value." The other common attr_name is
-      "displayValue."
-
-    Returns
-    -------
-    Any | None
-
-    """
-    if hasattr(record, field_name):
-        obj_field = getattr(record, field_name)
-        return getattr(obj_field, attr_name, None)
-    else:
-        return None
-
-
-def parse_date(date_str: Optional[str]) -> Optional[datetime]:
-    """Parse a date_str to datetime object or raise a ValueError."""
-    if date_str is None:
-        return None
-    else:
-        try:
-            dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-            return dt
-        except ValueError:
-            raise ValueError(
-                f"Invalid date format: {date_str}. Expected ISO format."
-            )
-
-
 class SlimsTableHandler:
     """Class to handle tables pulled from slims."""
 
@@ -84,6 +30,60 @@ class SlimsTableHandler:
         session : Slims
         """
         self.session = session
+
+    @staticmethod
+    def parse_html(v: Optional[str]) -> Optional[str]:
+        """Parse link from html tag"""
+        if v is None:
+            return None
+        try:
+            root = ET.fromstring(v)
+            return root.get("href")
+        except ET.ParseError:
+            return v
+        except Exception as e:
+            logging.warning(f"An exception occurred parsing link {v}: {e}")
+            return None
+
+    @staticmethod
+    def get_attr_or_none(
+        record: Record, field_name: str, attr_name: str = "value"
+    ) -> Optional[Any]:
+        """
+        Get a column attribute for a record at the field name. If the record
+        does not have the field then return None.
+        Parameters
+        ----------
+        record : Records
+        field_name : str
+        attr_name : str
+        Column attribute. Default is "value." The other common attr_name is
+        "displayValue."
+
+        Returns
+        -------
+        Any | None
+
+        """
+        if hasattr(record, field_name):
+            obj_field = getattr(record, field_name)
+            return getattr(obj_field, attr_name, None)
+        else:
+            return None
+
+    @staticmethod
+    def parse_date(date_str: Optional[str]) -> Optional[datetime]:
+        """Parse a date_str to datetime object or raise a ValueError."""
+        if date_str is None:
+            return None
+        else:
+            try:
+                dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+                return dt
+            except ValueError:
+                raise ValueError(
+                    f"Invalid date format: {date_str}. Expected ISO format."
+                )
 
     @staticmethod
     def _get_date_criteria(
@@ -129,8 +129,8 @@ class SlimsTableHandler:
         return date_criteria
 
     # TODO: refactor this to make it simpler
-    @staticmethod
     def _update_graph(  # noqa: C901
+        self,
         foreign_table: str,
         foreign_rows: List[Record],
         foreign_table_col: str,
@@ -174,7 +174,9 @@ class SlimsTableHandler:
         if foreign_table_col.endswith("_pk"):
             for row in input_rows:
                 for input_table_col in input_table_cols:
-                    foreign_table_pk = get_attr_or_none(row, input_table_col)
+                    foreign_table_pk = self.get_attr_or_none(
+                        row, input_table_col
+                    )
                     if (
                         isinstance(foreign_table_pk, int)
                         and g.nodes.get(f"{foreign_table}.{foreign_table_pk}")
@@ -196,7 +198,7 @@ class SlimsTableHandler:
                                 )
         else:
             for row in foreign_rows:
-                input_table_pk = get_attr_or_none(row, foreign_table_col)
+                input_table_pk = self.get_attr_or_none(row, foreign_table_col)
                 if (
                     isinstance(input_table_pk, int)
                     and g.nodes.get(f"{input_table}.{input_table_pk}")
@@ -237,8 +239,8 @@ class SlimsTableHandler:
         sets_of_foreign_keys = {r: set() for r in input_table_cols}
         for row in input_rows:
             for fk_name in input_table_cols:
-                if get_attr_or_none(row, fk_name) is not None:
-                    key_values = get_attr_or_none(row, fk_name)
+                if self.get_attr_or_none(row, fk_name) is not None:
+                    key_values = self.get_attr_or_none(row, fk_name)
                     if isinstance(key_values, list):
                         key_values = set(key_values)
                     else:
