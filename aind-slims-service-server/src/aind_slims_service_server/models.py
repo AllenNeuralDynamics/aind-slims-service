@@ -1,10 +1,9 @@
 """Models and schema definitions for backend data structures"""
 
-from datetime import datetime
 from decimal import Decimal
 from typing import List, Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AwareDatetime
 
 from aind_slims_service_server import __version__
 
@@ -58,7 +57,7 @@ class EcephysRewardSpouts(BaseModel):
 class SlimsEcephysData(BaseModel):
     """Expected Model that needs to be extracted from SLIMS"""
 
-    experiment_run_created_on: Optional[datetime] = None
+    experiment_run_created_on: Optional[AwareDatetime] = None
     subject_id: Optional[str] = None
     operator: Optional[str] = None
     instrument: Optional[str] = None

@@ -16,6 +16,7 @@ from aind_slims_service_server.models import (
     EcephysStreamModule,
     SlimsEcephysData,
 )
+from datetime import timezone
 
 
 class EcephysSessionHandler(SlimsTableHandler):
@@ -262,10 +263,15 @@ class EcephysSessionHandler(SlimsTableHandler):
 
         for node in root_nodes:
             ephys_data = SlimsEcephysData()
-            ephys_data.experiment_run_created_on = self.get_attr_or_none(
+            experiment_run_created_on_ts = self.get_attr_or_none(
                 g.nodes[node]["row"], "xprn_createdOn"
             )
-
+            ephys_data.experiment_run_created_on = (
+                None if experiment_run_created_on_ts is None
+                else datetime.fromtimestamp(
+                    experiment_run_created_on_ts/1000, tz=timezone.utc
+                )
+            )
             for n in descendants(g, node):
                 row = g.nodes[n]["row"]
                 table_name = g.nodes[n]["table_name"]
