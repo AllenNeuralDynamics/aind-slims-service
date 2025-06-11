@@ -14,13 +14,8 @@ from aind_slims_service_server.handlers.table_handler import (
     parse_date,
 )
 from aind_slims_service_server.models import (
-    Content,
     EcephysRewardSpouts,
     EcephysStreamModule,
-    ExperimentRun,
-    ExperimentRunStep,
-    ReferenceDataRecord,
-    Result,
     SlimsEcephysData,
 )
 
@@ -28,127 +23,83 @@ from aind_slims_service_server.models import (
 class EcephysSessionHandler(SlimsTableHandler):
     """Class to handle getting Ephys Session info from SLIMS."""
 
-    def _get_stream_module_data(self, row: Record) -> EcephysStreamModule:
+    @staticmethod
+    def _get_stream_module_data(row: Record) -> EcephysStreamModule:
         """Parses a stream module info from a SLIMS row."""
-        arc_angle = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "arc_angle")
-        )
-        module_angle = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "module_angle")
-        )
-        rotation_angle = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "rotation_angle")
-        )
-        ccf_coordinate_ap = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "ccf_coordinates_ap")
-        )
-        ccf_coordinate_ml = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "ccf_coordinates_ml")
-        )
-        ccf_coordinate_dv = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "ccf_coordinates_dv")
-        )
-        bregma_target_ap = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "bregma_target_ap")
-        )
-        bregma_target_ml = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "bregma_target_ml")
-        )
-        bregma_target_dv = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "bregma_target_dv")
-        )
-        surface_z = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "surface_z")
-        )
-        manipulator_x = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "manipulator_x")
-        )
-        manipulator_y = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "manipulator_y")
-        )
-        manipulator_z = get_attr_or_none(
-            row, self.alias(ReferenceDataRecord, "manipulator_z")
-        )
+        arc_angle = get_attr_or_none(row, "rdrc_cf_arcAngle")
+        module_angle = get_attr_or_none(row, "rdrc_cf_moduleAngle")
+        rotation_angle = get_attr_or_none(row, "rdrc_cf_rotationAngle")
+        ccf_coordinate_ap = get_attr_or_none(row, "rdrc_cf_ccfCoordinatesAp")
+        ccf_coordinate_ml = get_attr_or_none(row, "rdrc_cf_ccfCoordinatesMl")
+        ccf_coordinate_dv = get_attr_or_none(row, "rdrc_cf_ccfCoordinatesDv")
+        bregma_target_ap = get_attr_or_none(row, "rdrc_cf_bregmaAP")
+        bregma_target_ml = get_attr_or_none(row, "rdrc_cf_bregmaML")
+        bregma_target_dv = get_attr_or_none(row, "rdrc_cf_bregmaDV")
+        surface_z = get_attr_or_none(row, "rdrc_cf_surfaceZ")
+        manipulator_x = get_attr_or_none(row, "rdrc_cf_manipulatorX")
+        manipulator_y = get_attr_or_none(row, "rdrc_cf_manipulatory")
+        manipulator_z = get_attr_or_none(row, "rdrc_cf_manipulatorZ")
         return EcephysStreamModule(
-            implant_hole=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "implant_hole")
-            ),
-            assembly_name=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "assembly_name")
-            ),
-            probe_name=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "ephys_probe_name")
-            ),
+            implant_hole=get_attr_or_none(row, "rdrc_cf_implantHole"),
+            assembly_name=get_attr_or_none(row, "rdrc_cf_assemblyName"),
+            probe_name=get_attr_or_none(row, "rdrc_cf_probeName"),
             primary_target_structure=get_attr_or_none(
-                row,
-                self.alias(ReferenceDataRecord, "primary_targeted_structure"),
-                "displayValue",
+                row, "rdrc_cf_fk_primaryTargetedStructure", "displayValue"
             ),
             secondary_target_structures=get_attr_or_none(
-                row,
-                self.alias(
-                    ReferenceDataRecord, "secondary_targeted_structures"
-                ),
-                "displayValues",
+                row, "rdrc_cf_fk_secondaryTargetedStructures", "displayValues"
             ),
-            arc_angle=(
-                None if arc_angle is None
-                else Decimal(str(arc_angle))
-            ),
+            arc_angle=(None if arc_angle is None else Decimal(str(arc_angle))),
             module_angle=(
-                None if module_angle is None
-                else Decimal(str(module_angle))
+                None if module_angle is None else Decimal(str(module_angle))
             ),
             rotation_angle=(
-                None if rotation_angle is None
+                None
+                if rotation_angle is None
                 else Decimal(str(rotation_angle))
             ),
             coordinate_transform=get_attr_or_none(
-                row,
-                self.alias(ReferenceDataRecord, "coordinate_transform"),
-                "displayValue",
+                row, "rdrc_cf_coordinateTransform", "displayValue"
             ),
             ccf_coordinate_ap=(
-                None if ccf_coordinate_ap is None
+                None
+                if ccf_coordinate_ap is None
                 else Decimal(str(ccf_coordinate_ap))
             ),
             ccf_coordinate_ml=(
-                None if ccf_coordinate_ml is None
+                None
+                if ccf_coordinate_ml is None
                 else Decimal(str(ccf_coordinate_ml))
             ),
             ccf_coordinate_dv=(
-                None if ccf_coordinate_dv is None
+                None
+                if ccf_coordinate_dv is None
                 else Decimal(str(ccf_coordinate_dv))
             ),
             ccf_coordinate_unit=get_attr_or_none(
-                row,
-                self.alias(ReferenceDataRecord, "ccf_coordinates_ap"),
-                "unit",
+                row, "rdrc_cf_ccfCoordinatesAp", "unit"
             ),
-            ccf_version=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "ccf_version")
-            ),
+            ccf_version=get_attr_or_none(row, "rdrc_cf_ccfVersion"),
             bregma_target_ap=(
-                None if bregma_target_ap is None
+                None
+                if bregma_target_ap is None
                 else Decimal(str(bregma_target_ap))
             ),
             bregma_target_ml=(
-                None if bregma_target_ml is None
+                None
+                if bregma_target_ml is None
                 else Decimal(str(bregma_target_ml))
             ),
             bregma_target_dv=(
-                None if bregma_target_dv is None
+                None
+                if bregma_target_dv is None
                 else Decimal(str(bregma_target_dv))
             ),
             bregma_target_unit=get_attr_or_none(
-                row,
-                self.alias(ReferenceDataRecord, "bregma_target_ap"),
-                "unit",
+                row, "rdrc_cf_bregmaAP", "unit"
             ),
             surface_z=(None if surface_z is None else Decimal(str(surface_z))),
-            surface_z_unit=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "surface_z"), "unit"
-            ),
+            surface_z_unit=get_attr_or_none(row, "rdrc_cf_surfaceZ", "unit"),
             manipulator_x=(
                 None if manipulator_x is None else Decimal(str(manipulator_x))
             ),
@@ -159,63 +110,49 @@ class EcephysSessionHandler(SlimsTableHandler):
                 None if manipulator_z is None else Decimal(str(manipulator_z))
             ),
             manipulator_unit=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "manipulator_x"), "unit"
+                row, "rdrc_cf_manipulatorX", "unit"
             ),
-            dye=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "dye"), "displayValue"
-            ),
+            dye=get_attr_or_none(row, "rdrc_cf_fk_dye", "displayValue"),
         )
 
-    def _get_reward_spouts_data(self, row: Record) -> EcephysRewardSpouts:
+    @staticmethod
+    def _get_reward_spouts_data(row: Record) -> EcephysRewardSpouts:
         """Parses a reward spouts info from a SLIMS row."""
         return EcephysRewardSpouts(
-            spout_side=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "spout_side")
-            ),
+            spout_side=get_attr_or_none(row, "rdrc_cf_spoutSide"),
             starting_position=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "starting_position")
+                row, "rdrc_cf_startingPosition"
             ),
             variable_position=get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "variable_position")
+                row, "rdrc_cf_variablePosition"
             ),
         )
 
     def _handle_content(self, ephys_data: SlimsEcephysData, row: Record):
         """Handles the content table."""
-        ephys_data.subject_id = get_attr_or_none(
-            row, self.alias(Content, "name")
-        )
+        ephys_data.subject_id = get_attr_or_none(row, "cntn_barCode")
 
     def _handle_experimentrunstep(
-            self, ephys_data: SlimsEcephysData, row: Record
+        self, ephys_data: SlimsEcephysData, row: Record
     ):
         """Handles the experiment run step table."""
-        if (
-            get_attr_or_none(row, self.alias(ExperimentRunStep, "name"))
-            != "Group of Sessions"
-        ):
+        if get_attr_or_none(row, "xprs_name") != "Group of Sessions":
             return
         ephys_data.operator = get_attr_or_none(
-            row,
-            self.alias(ExperimentRunStep, "operator_dynamic"),
-            "joinedDisplayValue",
+            row, "xprs_cf_fk_operator", "joinedDisplayValue"
         )
-        ephys_data.session_type = get_attr_or_none(
-            row, self.alias(ExperimentRunStep, "session_type_fixed")
-        )
+        ephys_data.session_type = get_attr_or_none(row, "xprs_cf_sessionType")
         ephys_data.mouse_platform_name = get_attr_or_none(
-            row, self.alias(ExperimentRunStep, "mouse_platform_name")
+            row, "xprs_cf_mousePlatformName"
         )
         ephys_data.active_mouse_platform = get_attr_or_none(
-            row, self.alias(ExperimentRunStep, "active_mouse_platform")
+            row, "xprs_cf_activeMousePlatform"
         )
         ephys_data.instrument = get_attr_or_none(
-            row,
-            self.alias(ExperimentRunStep, "instrument_dynamic"),
-            "displayValue",
+            row, "xprs_cf_fk_instrument", "displayValue"
         )
         ephys_data.device_calibrations = get_attr_or_none(
-            row, self.alias(ExperimentRunStep, "device_calibrations")
+            row, "xprs_cf_deviceCalibrations"
         )
 
     def _handle_result(self, ephys_data: SlimsEcephysData, row: Record):
@@ -223,10 +160,10 @@ class EcephysSessionHandler(SlimsTableHandler):
         label = get_attr_or_none(row, "test_label")
         if label == "Mouse Session":
             ephys_data.session_name = get_attr_or_none(
-                row, self.alias(Result, "session_name")
+                row, "rslt_cf_sessionName"
             )
             animal_weight_prior = get_attr_or_none(
-                row, self.alias(Result, "animal_weight_prior")
+                row, "rslt_cf_animalWeightPrior"
             )
             ephys_data.animal_weight_prior = (
                 None
@@ -234,7 +171,7 @@ class EcephysSessionHandler(SlimsTableHandler):
                 else Decimal(str(animal_weight_prior))
             )
             animal_weight_after = get_attr_or_none(
-                row, self.alias(Result, "animal_weight_post")
+                row, "rslt_cf_animalWeightPost"
             )
             ephys_data.animal_weight_after = (
                 None
@@ -242,51 +179,48 @@ class EcephysSessionHandler(SlimsTableHandler):
                 else Decimal(str(animal_weight_after))
             )
             ephys_data.animal_weight_unit = get_attr_or_none(
-                row, self.alias(Result, "animal_weight_prior"), "unit"
+                row, "rslt_cf_animalWeightPrior", "unit"
             )
             reward_consumed = get_attr_or_none(
-                row, self.alias(Result, "reward_consumed")
+                row, "rslt_cf_rewardConsumedvolume"
             )
             ephys_data.reward_consumed = (
-                None if reward_consumed is None
+                None
+                if reward_consumed is None
                 else Decimal(str(reward_consumed))
             )
             ephys_data.reward_consumed_unit = get_attr_or_none(
-                row, self.alias(Result, "reward_consumed"), "unit"
+                row, "rslt_cf_rewardConsumedvolume", "unit"
             )
             ephys_data.link_to_stimulus_epoch_code = get_attr_or_none(
-                row, self.alias(Result, "link_to_stimulus_epoch_code")
+                row, "rslt_cf_linkToStimulusEpochCode"
             )
             ephys_data.stimulus_epochs = get_attr_or_none(
-                row, self.alias(Result, "stimulus_epochs")
+                row, "rslt_cf_stimulusEpochs"
             )
 
         elif label == "Streams":
             ephys_data.stream_modalities = get_attr_or_none(
-                row, self.alias(Result, "stream_modalities_fixed")
+                row, "rslt_cf_streamModalities"
             )
-            ephys_data.daq_names = get_attr_or_none(
-                row, self.alias(Result, "daq_names_fixed")
-            )
+            ephys_data.daq_names = get_attr_or_none(row, "rslt_cf_daqNames")
             ephys_data.camera_names = get_attr_or_none(
-                row, self.alias(Result, "camera_names_fixed")
+                row, "rslt_cf_cameraNames"
             )
 
     def _handle_referencedatarecord(
-            self, ephys_data: SlimsEcephysData, row: Record
+        self, ephys_data: SlimsEcephysData, row: Record
     ):
         """Handles the reference data record table."""
         ref_type = get_attr_or_none(
-            row,
-            self.alias(ReferenceDataRecord, "reference_data"),
-            "displayValue",
+            row, "rdrc_fk_referenceDataType", "displayValue"
         )
         if ref_type == "Reward Delivery":
             ephys_data.reward_solution = get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "reward_solution")
+                row, "rdrc_cf_rewardSolution"
             )
             ephys_data.other_reward_solution = get_attr_or_none(
-                row, self.alias(ReferenceDataRecord, "specify_reward_solution")
+                row, "rdrc_cf_specifyRewardSolution"
             )
         elif ref_type == "Reward Spouts":
             ephys_data.reward_spouts.append(self._get_reward_spouts_data(row))
@@ -321,9 +255,9 @@ class EcephysSessionHandler(SlimsTableHandler):
         for node in root_nodes:
             ephys_data = SlimsEcephysData()
             ephys_data.experiment_run_created_on = get_attr_or_none(
-                g.nodes[node]["row"],
-                ExperimentRun.model_fields["created_on"].alias,
+                g.nodes[node]["row"], "xprn_createdOn"
             )
+
             for n in descendants(g, node):
                 row = g.nodes[n]["row"]
                 table_name = g.nodes[n]["table_name"]
@@ -333,15 +267,15 @@ class EcephysSessionHandler(SlimsTableHandler):
                 )
                 if table_handler:
                     table_handler(ephys_data, row)
+
             if (
                 subject_id is None or subject_id == ephys_data.subject_id
-                ) and (
+            ) and (
                 session_name is None or session_name == ephys_data.session_name
             ):
                 ephys_data_list.append(
                     SlimsEcephysData.model_validate(ephys_data.model_dump())
                 )
-
         return ephys_data_list
 
     def _get_graph(
