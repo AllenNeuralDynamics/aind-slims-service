@@ -1,10 +1,12 @@
 """Module to handle endpoint responses"""
 
-from fastapi import APIRouter, Depends, HTTPException, Path, status
-from requests_toolbelt.sessions import BaseUrlSession
+from typing import List, Optional
 
-from aind_slims_service_server.handler import SessionHandler
-from aind_slims_service_server.models import Content, HealthCheck
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from slims.slims import Slims
+
+from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
+from aind_slims_service_server.models import HealthCheck, SlimsEcephysData
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()
@@ -29,20 +31,45 @@ async def get_health() -> HealthCheck:
 
 
 @router.get(
-    "/{example_arg}",
-    response_model=Content,
+    "/ecephys_sessions",
+    response_model=List[SlimsEcephysData],
 )
-async def get_content(
-    example_arg: str = Path(..., examples=["raw", "length"]),
-    session: BaseUrlSession = Depends(get_session),
+async def get_ecephys_sessions(
+    subject_id: Optional[str] = Query(
+        None,
+        alias="subject_id",
+        examples=["750108"],
+    ),
+    session_name: Optional[str] = Query(
+        None,
+        alias="session_name",
+        description="Name of the session",
+    ),
+    start_date_gte: Optional[str] = Query(
+        None,
+        alias="start_date_gte",
+        description="Experiment run created on or after. (ISO format)",
+    ),
+    end_date_lte: Optional[str] = Query(
+        None,
+        alias="end_date_lte",
+        description="Experiment run created on or before. (ISO format)",
+    ),
+    session: Slims = Depends(get_session),
 ):
     """
-    ## Example content
-    Return either the raw content or the number of characters.
+    ## Ecephys session metadata
+    Retrieves Ecephys session information from SLIMS.
     """
-    content = SessionHandler(session=session).get_info(example_arg=example_arg)
-    # Adding this for illustrative purposes.
-    if len(content.info) == 0:
+    slims_ecephys_sessions = EcephysSessionHandler(
+        session=session
+    ).get_ephys_data_from_slims(
+        subject_id=subject_id,
+        session_name=session_name,
+        start_date_greater_than_or_equal=start_date_gte,
+        end_date_less_than_or_equal=end_date_lte,
+    )
+    if len(slims_ecephys_sessions) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     else:
-        return content
+        return slims_ecephys_sessions

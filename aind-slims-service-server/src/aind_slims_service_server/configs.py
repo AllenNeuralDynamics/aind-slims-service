@@ -1,18 +1,20 @@
-"""Module for settings to connect to backend"""
+"""Module for settings to connect to SLIMS backend"""
 
-from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from aind_settings_utils.aws import (
+    ParameterStoreAppBaseSettings,
+)
+from pydantic import Field, SecretStr
+from pydantic_settings import SettingsConfigDict
 
 
-class Settings(BaseSettings):
-    """
-    ### Settings needed to connect to a database or website.
-    We will just connect to an example website.
-    """
+class Settings(ParameterStoreAppBaseSettings):
+    """Settings for connecting to SLIMS Database."""
 
-    model_config = SettingsConfigDict(env_prefix="MYENV_")
-    host: str = Field(
-        ...,
-        title="Host",
-        description="Host address of example.com",
+    username: str = Field(..., description="User name")
+    password: SecretStr = Field(..., description="Password")
+    host: str = Field(..., description="host")
+    db: str = Field(default="slims", description="Database")
+    model_config = SettingsConfigDict(
+        env_prefix="SLIMS_",
+        case_sensitive=False,
     )
