@@ -142,3 +142,35 @@ def test_ecephys_data():
         )
     ]
 
+
+@pytest.fixture()
+def mock_get_instrument_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw instrument data, including attachment."""
+    table_to_file = {
+        "ReferenceDataRecord": "reference_data_record.json",
+    }
+    fetch_mock = mock_slims_fetch(
+        mocker, table_to_file, RESOURCES_DIR / "aind_instruments"
+    )
+    # Mock the attachment retrieval
+    instrument_json_path = (
+        RESOURCES_DIR / "aind_instruments" / "instrument.json"
+    )
+    with open(instrument_json_path) as f:
+        instrument_json = json.load(f)
+    mock_response = MagicMock()
+    mock_response.json.return_value = instrument_json
+    mocker.patch(
+        "aind_slims_service_server.handlers.instrument."
+        "InstrumentSessionHandler._get_attachment",
+        return_value=mock_response,
+    )
+    return fetch_mock
+
+
+@pytest.fixture(scope="session")
+def client() -> Generator[TestClient, Any, None]:
+    """Creating a client for testing purposes."""
+
+    with TestClient(app) as c:
+        yield c

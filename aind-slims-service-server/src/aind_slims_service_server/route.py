@@ -77,6 +77,7 @@ async def get_ecephys_sessions(
     else:
         return slims_ecephys_sessions
 
+
 @router.get(
     "/aind_instruments/{input_id}",
 )

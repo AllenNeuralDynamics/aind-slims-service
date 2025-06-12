@@ -237,6 +237,16 @@ class TestSlimsTableHandler(unittest.TestCase):
                 and set(criteria.to_dict().get("value", [])) == {1, 2}
             )
 
+    def test_get_attachment(self):
+        """Tests _get_attachment method"""
+        mock_session = MagicMock()
+        mock_response = MagicMock()
+        mock_session.slims_api.get.return_value = mock_response
+        handler = SlimsTableHandler(session=mock_session)
+        response = handler._get_attachment(pk=123)
+        mock_session.slims_api.get.assert_called_once_with("repo/123")
+        self.assertEqual(response, mock_response)
+
 
 if __name__ == "__main__":
     unittest.main()

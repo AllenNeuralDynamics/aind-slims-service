@@ -18,8 +18,3 @@ class Settings(ParameterStoreAppBaseSettings):
         env_prefix="SLIMS_",
         case_sensitive=False,
     )
-
-    username: str = Field(..., description="User name")
-    password: SecretStr = Field(..., description="Password")
-    host: str = Field(..., description="host")
-    db: str = Field(default="slims", description="Database")

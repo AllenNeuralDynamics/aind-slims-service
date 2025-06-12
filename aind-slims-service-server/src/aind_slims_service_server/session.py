@@ -6,7 +6,8 @@ from aind_slims_service_server.configs import Settings
 
 settings = Settings()
 
-def get_session(settings=None):
+
+def get_session():
     """
     Yield a session object. This will automatically close the session when
     finished.

@@ -19,6 +19,7 @@ from slims.internal import Record
 from slims.slims import Slims
 from requests.models import Response
 
+
 class SlimsTableHandler:
     """Class to handle tables pulled from slims."""
 
@@ -84,7 +85,7 @@ class SlimsTableHandler:
                 raise ValueError(
                     f"Invalid date format: {date_str}. Expected ISO format."
                 )
-            
+
     def _get_attachment(self, pk: int) -> Response:
         """Uses session object to get attachment by primary key."""
         return self.session.slims_api.get(f"repo/{pk}")

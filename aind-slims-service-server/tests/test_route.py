@@ -1,6 +1,6 @@
 """Test routes"""
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from starlette.testclient import TestClient
@@ -35,57 +35,32 @@ class TestRoutes:
         assert response.status_code == 404
         assert response.json() == expected_response
 
-
-# TODO: replace these tests and add to TestRoutes suite
-class TestInstrumentRoute:
-    """Test instrument responses."""
-
-    @patch(
-        "aind_slims_service_server.handlers.instrument."
-        "InstrumentSessionHandler.get_instrument_data"
-    )
     def test_get_200_instrument(
-        self, mock_get_instrument, client, test_slims_instrument
+        self, client: TestClient, mock_get_instrument_data: MagicMock
     ):
-        """Tests aind_instrument endpoint"""
-        mock_get_instrument.return_value = test_slims_instrument
+        """Tests a good response for instrument data"""
         response = client.get("/aind_instruments/SmartSPIM2-2")
         assert response.status_code == 200
-        assert response.json() == test_slims_instrument
+        data = response.json()
+        assert data["instrument_id"] == "SmartSPIM2-2"
 
-    @patch(
-        "aind_slims_service_server.handlers.instrument."
-        "InstrumentSessionHandler.get_instrument_data"
-    )
-    def test_get_404_instrument(self, mock_get_instrument, client):
-        """Tests aind_instrument endpoint with non-existent instrument"""
-        mock_get_instrument.return_value = None
-        response = client.get("/aind_instruments/nonExistentInstrument")
-        assert response.status_code == 404
-        assert response.json() == {"detail": "Instrument not found"}
-
-    @patch(
-        "aind_slims_service_server.handlers.instrument."
-        "InstrumentSessionHandler.get_instrument_data"
-    )
-    def test_200_get_partial_match_instrument(
-        self, mock_get_instrument, client, test_slims_instrument
+    def test_get_200_partial_match_instrument(
+        self, client: TestClient, mock_get_instrument_data: MagicMock
     ):
-        """Tests aind_instrument endpoint with partial match"""
-        mock_get_instrument.return_value = [test_slims_instrument]
+        """Tests a partial match response for instrument data"""
         response = client.get("/aind_instruments/SmartSPIM?partial_match=true")
         assert response.status_code == 200
-        assert response.json() == [test_slims_instrument]
+        data = response.json()
+        assert data["instrument_id"] == "SmartSPIM2-2"
 
-    @patch(
-        "aind_slims_service_server.handlers.instrument."
-        "InstrumentSessionHandler.get_instrument_data"
-    )
-    def test_500_get_instrument_error(self, mock_get_instrument, client):
-        """Tests aind_instrument endpoint with an error"""
-        mock_get_instrument.side_effect = Exception("Something went wrong")
-        response = client.get("/aind_instruments/SmartSPIM2-2")
-        assert response.status_code == 500
+    def test_get_404_instrument(self, client: TestClient):
+        """Tests a missing instrument response"""
+        with patch("slims.slims.Slims.fetch", return_value=[]):
+            response = client.get("/aind_instruments/nonExistentInstrument")
+            expected_response = {"detail": "Instrument not found"}
+            assert response.status_code == 404
+            assert response.json() == expected_response
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

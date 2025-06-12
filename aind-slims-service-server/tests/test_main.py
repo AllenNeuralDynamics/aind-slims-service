@@ -20,6 +20,13 @@ class TestMain:
         response = client.get("/ecephys_sessions?subject_id=750108")
         assert 200 == response.status_code
 
+    def test_get_instrument(
+        self, client: TestClient, mock_get_instrument_data: MagicMock
+    ):
+        """Tests instrument endpoint"""
+        response = client.get("/aind_instruments/SmartSPIM2-2")
+        assert 200 == response.status_code
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

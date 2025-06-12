@@ -4,7 +4,6 @@ from slims.criteria import equals, contains
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
-    get_attr_or_none,
 )
 import logging
 
@@ -44,7 +43,9 @@ class InstrumentSessionHandler(SlimsTableHandler):
         logging.info(
             f"Found {len(rdrc)} ReferenceDataRecord(s) for {input_id}"
         )
-        attm_pk = get_attr_or_none(rdrc[0], "rdrc_cf_instrumentJsonAttachment")
+        attm_pk = self.get_attr_or_none(
+            rdrc[0], "rdrc_cf_instrumentJsonAttachment"
+        )
         if not attm_pk:
             logging.warning(
                 f"No attachment found for ReferenceDataRecord with {input_id}"
