@@ -150,12 +150,10 @@ def mock_get_instrument_data(mocker: MockFixture) -> MagicMock:
         "ReferenceDataRecord": "reference_data_record.json",
     }
     fetch_mock = mock_slims_fetch(
-        mocker, table_to_file, RESOURCES_DIR / "aind_instruments"
+        mocker, table_to_file, RESOURCES_DIR / "instrument"
     )
     # Mock the attachment retrieval
-    instrument_json_path = (
-        RESOURCES_DIR / "aind_instruments" / "instrument.json"
-    )
+    instrument_json_path = RESOURCES_DIR / "instrument" / "instrument.json"
     with open(instrument_json_path) as f:
         instrument_json = json.load(f)
     mock_response = MagicMock()
