@@ -1,6 +1,6 @@
 """Module to handle endpoint responses"""
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from slims.slims import Slims
@@ -80,12 +80,11 @@ async def get_ecephys_sessions(
 
 @router.get(
     "/aind_instruments/{input_id}",
+    response_model=List[Dict[str, Any]],
 )
 async def get_aind_instrument(
     input_id: str = Path(
-        ...,
-        examples=["440_SmartSPIM1_20240327"],
-        description="Instrument ID"
+        ..., examples=["440_SmartSPIM1_20240327"], description="Instrument ID"
     ),
     partial_match: bool = Query(
         False,
@@ -102,9 +101,6 @@ async def get_aind_instrument(
     """
     handler = InstrumentSessionHandler(session)
     instrument_data = handler.get_instrument_data(input_id, partial_match)
-    if not instrument_data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Instrument not found",
-        )
+    if len(instrument_data) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
     return instrument_data

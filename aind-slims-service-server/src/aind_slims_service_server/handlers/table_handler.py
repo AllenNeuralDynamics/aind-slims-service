@@ -6,7 +6,9 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import Any, List, Optional, Union
+
 from networkx import DiGraph
+from requests.models import Response
 from slims.criteria import (
     Criterion,
     Junction,
@@ -17,7 +19,6 @@ from slims.criteria import (
 )
 from slims.internal import Record
 from slims.slims import Slims
-from requests.models import Response
 
 
 class SlimsTableHandler:
@@ -252,7 +253,7 @@ class SlimsTableHandler:
                         key_values = {key_values}
                     sets_of_foreign_keys[fk_name] = sets_of_foreign_keys[
                         fk_name
-                        ].union(key_values)
+                    ].union(key_values)
         total_fks = set()
         for v in sets_of_foreign_keys.values():
             total_fks = total_fks.union(v)

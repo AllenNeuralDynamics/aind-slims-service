@@ -3,7 +3,7 @@
 from decimal import Decimal
 from typing import List, Literal, Optional
 
-from pydantic import BaseModel, AwareDatetime
+from pydantic import AwareDatetime, BaseModel
 
 from aind_slims_service_server import __version__
 

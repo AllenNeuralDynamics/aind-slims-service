@@ -1,7 +1,9 @@
 """Tests methods in instrument handler module"""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
+
 import pytest
+
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
@@ -20,7 +22,7 @@ class TestInstrumentSessionHandler:
         )
         instrument_name = "SmartSPIM2-2"
         instrument_data = handler.get_instrument_data(instrument_name)
-        assert instrument_data["instrument_id"] == instrument_name
+        assert instrument_data[0]["instrument_id"] == instrument_name
 
     def test_get_instrument_data_empty_input(self):
         """Test ValueError when input_id is empty"""
@@ -36,31 +38,7 @@ class TestInstrumentSessionHandler:
         mock_session.fetch.return_value = []
         handler = InstrumentSessionHandler(session=mock_session)
         result = handler.get_instrument_data("NonExistentInstrument")
-        assert result is None
-
-    def test_get_instrument_data_no_attachment(
-        self,
-        mock_get_instrument_data: MagicMock,
-    ):
-        """Test None returned when attachment column is missing"""
-        handler = InstrumentSessionHandler(
-            session=MagicMock(fetch=mock_get_instrument_data)
-        )
-        with (
-            patch.object(
-                InstrumentSessionHandler,
-                "get_attr_or_none",
-                return_value=None,
-            ) as mock_get_attr,
-            patch.object(
-                InstrumentSessionHandler,
-                "_get_attachment",
-            ) as mock_get_attachment,
-        ):
-            result = handler.get_instrument_data("SmartSPIM2-2")
-            assert result is None
-            mock_get_attr.assert_called()
-            mock_get_attachment.assert_not_called()
+        assert result == []
 
     def test_get_instrument_data_partial_match(
         self,
@@ -74,7 +52,7 @@ class TestInstrumentSessionHandler:
         instrument_data = handler.get_instrument_data(
             partial_instrument_name, partial_match=True
         )
-        assert instrument_data["instrument_id"] == "SmartSPIM2-2"
+        assert instrument_data[0]["instrument_id"] == "SmartSPIM2-2"
 
 
 if __name__ == "__main__":

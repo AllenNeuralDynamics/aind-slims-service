@@ -1,8 +1,9 @@
 """Module to test main app"""
 
 from unittest.mock import MagicMock
-from fastapi.testclient import TestClient
+
 import pytest
+from fastapi.testclient import TestClient
 
 
 class TestMain:
