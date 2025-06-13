@@ -84,7 +84,7 @@ async def get_ecephys_sessions(
 )
 async def get_aind_instrument(
     input_id: str = Path(
-        ..., examples=["SmartSPIM4401"], description="Instrument ID"
+        ..., examples=["440_SmartSPIM1_20240327"], description="Instrument ID"
     ),
     partial_match: bool = Query(
         False,
