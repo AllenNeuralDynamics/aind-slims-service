@@ -5,25 +5,28 @@ import os
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import MagicMock
 from typing import Any, Generator
+from unittest.mock import MagicMock
+
 import pytest
 from fastapi.testclient import TestClient
+from pytest_mock import MockFixture
 from slims.internal import Record
+
 from aind_slims_service_server.main import app
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
     EcephysStreamModule,
     SlimsEcephysData,
 )
-from pytest_mock import MockFixture
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
 
 def mock_slims_fetch(
-    mocker: MockFixture, table_to_file: dict,
-    resources_dir: Path = RESOURCES_DIR
+    mocker: MockFixture,
+    table_to_file: dict,
+    resources_dir: Path = RESOURCES_DIR,
 ) -> MagicMock:
     """
     Patch slims session.fetch to return records from resource files.
@@ -46,6 +49,7 @@ def mock_slims_fetch(
         filename = table_to_file.get(table)
         with open(resources_dir / filename) as f:
             records = json.load(f)
+        # noinspection PyTypeChecker
         return [Record(json_entity=j, slims_api=None) for j in records]
 
     mock_get = mocker.patch("slims.slims.Slims.fetch")

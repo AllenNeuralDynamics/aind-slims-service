@@ -1,11 +1,13 @@
 """Module for fetching rig and instrument data from SLIMS"""
 
-from slims.criteria import equals, contains
+import logging
+from typing import Any, Dict, List
+
+from slims.criteria import contains, equals
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
 )
-import logging
 
 
 class InstrumentSessionHandler(SlimsTableHandler):
@@ -15,13 +17,24 @@ class InstrumentSessionHandler(SlimsTableHandler):
         self,
         input_id: str,
         partial_match: bool = False,
-    ):
+    ) -> List[Dict[str, Any]]:
         """
         Get Instrument data from SLIMS.
+
+        Parameters
+        ----------
+        input_id : str
+        partial_match : bool
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+
         Raises
         ------
         ValueError
           The input_id cannot be an empty string.
+
         """
         if not input_id:
             raise ValueError("input_id must not be empty!")
@@ -36,20 +49,18 @@ class InstrumentSessionHandler(SlimsTableHandler):
                 table="ReferenceDataRecord",
                 criteria=equals("rdrc_name", input_id),
             )
-        if not rdrc:
-            return None
 
-        # TODO: Handle the case where multiple records are found
         logging.info(
             f"Found {len(rdrc)} ReferenceDataRecord(s) for {input_id}"
         )
-        attm_pk = self.get_attr_or_none(
-            rdrc[0], "rdrc_cf_instrumentJsonAttachment"
-        )
-        if not attm_pk:
-            logging.warning(
-                f"No attachment found for ReferenceDataRecord with {input_id}"
-            )
-            return None
-        response = self._get_attachment(pk=attm_pk)
-        return response.json()
+        attm_pks = [
+            self.get_attr_or_none(r, "rdrc_cf_instrumentJsonAttachment")
+            for r in rdrc
+            if self.get_attr_or_none(r, "rdrc_cf_instrumentJsonAttachment")
+            is not None
+        ]
+        attachments = []
+        for attm_pk in attm_pks:
+            response = self._get_attachment(pk=attm_pk)
+            attachments.append(response.json())
+        return attachments

@@ -1,6 +1,6 @@
 """Module to retrieve ephys data from SLIMS using session object."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, Tuple
 
@@ -16,7 +16,6 @@ from aind_slims_service_server.models import (
     EcephysStreamModule,
     SlimsEcephysData,
 )
-from datetime import timezone
 
 
 class EcephysSessionHandler(SlimsTableHandler):
@@ -267,9 +266,10 @@ class EcephysSessionHandler(SlimsTableHandler):
                 g.nodes[node]["row"], "xprn_createdOn"
             )
             ephys_data.experiment_run_created_on = (
-                None if experiment_run_created_on_ts is None
+                None
+                if experiment_run_created_on_ts is None
                 else datetime.fromtimestamp(
-                    experiment_run_created_on_ts/1000, tz=timezone.utc
+                    experiment_run_created_on_ts / 1000, tz=timezone.utc
                 )
             )
             for n in descendants(g, node):
