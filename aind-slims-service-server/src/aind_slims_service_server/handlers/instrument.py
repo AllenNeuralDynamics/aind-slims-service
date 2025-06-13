@@ -3,7 +3,7 @@
 import logging
 from typing import Any, Dict, List
 
-from slims.criteria import contains, equals
+from slims.criteria import conjunction, contains, equals, greater_than_or_equal
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
@@ -39,16 +39,18 @@ class InstrumentSessionHandler(SlimsTableHandler):
         if not input_id:
             raise ValueError("input_id must not be empty!")
 
+        attachment_criteria = conjunction().add(
+            greater_than_or_equal("attachmentCount", 1)
+        )
         if partial_match:
-            rdrc = self.session.fetch(
-                table="ReferenceDataRecord",
-                criteria=contains("rdrc_name", input_id),
-            )
+            criteria = attachment_criteria.add(contains("rdrc_name", input_id))
         else:
-            rdrc = self.session.fetch(
-                table="ReferenceDataRecord",
-                criteria=equals("rdrc_name", input_id),
-            )
+            criteria = attachment_criteria.add(equals("rdrc_name", input_id))
+
+        rdrc = self.session.fetch(
+            table="ReferenceDataRecord",
+            criteria=criteria,
+        )
 
         logging.info(
             f"Found {len(rdrc)} ReferenceDataRecord(s) for {input_id}"
