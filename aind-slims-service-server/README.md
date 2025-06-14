@@ -77,4 +77,3 @@ type (mandatory) is one of:
 - **perf**: A code change that improves performance
 - **refactor**: A code change that neither fixes a bug nor adds a feature
 - **test**: Adding missing tests or correcting existing tests
-

@@ -6,7 +6,9 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import Any, List, Optional, Union
+
 from networkx import DiGraph
+from requests.models import Response
 from slims.criteria import (
     Criterion,
     Junction,
@@ -84,6 +86,10 @@ class SlimsTableHandler:
                 raise ValueError(
                     f"Invalid date format: {date_str}. Expected ISO format."
                 )
+
+    def _get_attachment(self, pk: int) -> Response:
+        """Uses session object to get attachment by primary key."""
+        return self.session.slims_api.get(f"repo/{pk}")
 
     @staticmethod
     def _get_date_criteria(
@@ -247,7 +253,7 @@ class SlimsTableHandler:
                         key_values = {key_values}
                     sets_of_foreign_keys[fk_name] = sets_of_foreign_keys[
                         fk_name
-                        ].union(key_values)
+                    ].union(key_values)
         total_fks = set()
         for v in sets_of_foreign_keys.values():
             total_fks = total_fks.union(v)

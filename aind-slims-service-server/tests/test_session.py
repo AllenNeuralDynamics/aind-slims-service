@@ -1,6 +1,7 @@
 """Tests session module"""
 
 import pytest
+
 from aind_slims_service_server.session import get_session
 
 

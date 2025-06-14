@@ -1,6 +1,6 @@
 """Test routes"""
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from starlette.testclient import TestClient
@@ -34,6 +34,32 @@ class TestRoutes:
         expected_response = {"detail": "Not found"}
         assert response.status_code == 404
         assert response.json() == expected_response
+
+    def test_get_200_instrument(
+        self, client: TestClient, mock_get_instrument_data: MagicMock
+    ):
+        """Tests a good response for instrument data"""
+        response = client.get("/aind_instruments/SmartSPIM2-2")
+        assert response.status_code == 200
+        data = response.json()
+        assert data[0]["instrument_id"] == "SmartSPIM2-2"
+
+    def test_get_200_partial_match_instrument(
+        self, client: TestClient, mock_get_instrument_data: MagicMock
+    ):
+        """Tests a partial match response for instrument data"""
+        response = client.get("/aind_instruments/SmartSPIM?partial_match=true")
+        assert response.status_code == 200
+        data = response.json()
+        assert data[0]["instrument_id"] == "SmartSPIM2-2"
+
+    def test_get_404_instrument(self, client: TestClient):
+        """Tests a missing instrument response"""
+        with patch("slims.slims.Slims.fetch", return_value=[]):
+            response = client.get("/aind_instruments/nonExistentInstrument")
+            expected_response = {"detail": "Not found"}
+            assert response.status_code == 404
+            assert response.json() == expected_response
 
 
 if __name__ == "__main__":

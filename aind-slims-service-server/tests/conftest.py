@@ -5,25 +5,28 @@ import os
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import MagicMock
 from typing import Any, Generator
+from unittest.mock import MagicMock
+
 import pytest
 from fastapi.testclient import TestClient
+from pytest_mock import MockFixture
 from slims.internal import Record
+
 from aind_slims_service_server.main import app
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
     EcephysStreamModule,
     SlimsEcephysData,
 )
-from pytest_mock import MockFixture
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
 
 
 def mock_slims_fetch(
-    mocker: MockFixture, table_to_file: dict,
-    resources_dir: Path = RESOURCES_DIR
+    mocker: MockFixture,
+    table_to_file: dict,
+    resources_dir: Path = RESOURCES_DIR,
 ) -> MagicMock:
     """
     Patch slims session.fetch to return records from resource files.
@@ -46,6 +49,7 @@ def mock_slims_fetch(
         filename = table_to_file.get(table)
         with open(resources_dir / filename) as f:
             records = json.load(f)
+        # noinspection PyTypeChecker
         return [Record(json_entity=j, slims_api=None) for j in records]
 
     mock_get = mocker.patch("slims.slims.Slims.fetch")
@@ -141,6 +145,29 @@ def test_ecephys_data():
             ],
         )
     ]
+
+
+@pytest.fixture()
+def mock_get_instrument_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw instrument data, including attachment."""
+    table_to_file = {
+        "ReferenceDataRecord": "reference_data_record.json",
+    }
+    fetch_mock = mock_slims_fetch(
+        mocker, table_to_file, RESOURCES_DIR / "instrument"
+    )
+    # Mock the attachment retrieval
+    instrument_json_path = RESOURCES_DIR / "instrument" / "instrument.json"
+    with open(instrument_json_path) as f:
+        instrument_json = json.load(f)
+    mock_response = MagicMock()
+    mock_response.json.return_value = instrument_json
+    mocker.patch(
+        "aind_slims_service_server.handlers.instrument."
+        "InstrumentSessionHandler._get_attachment",
+        return_value=mock_response,
+    )
+    return fetch_mock
 
 
 @pytest.fixture(scope="session")

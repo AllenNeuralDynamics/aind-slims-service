@@ -1,8 +1,10 @@
 """Tests methods in ecephys handler module"""
 
-import pytest
-from unittest.mock import MagicMock
 from typing import List
+from unittest.mock import MagicMock
+
+import pytest
+
 from aind_slims_service_server.handlers.ecephys import (
     EcephysSessionHandler,
 )
