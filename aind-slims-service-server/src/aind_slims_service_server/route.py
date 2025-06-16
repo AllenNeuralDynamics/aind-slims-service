@@ -9,7 +9,12 @@ from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
-from aind_slims_service_server.models import HealthCheck, SlimsEcephysData
+from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
+from aind_slims_service_server.models import (
+    HealthCheck,
+    SlimsEcephysData,
+    SlimsSpimData,
+)
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()
@@ -104,3 +109,37 @@ async def get_aind_instrument(
     if len(instrument_data) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return instrument_data
+
+
+@router.get("/smartspim_imaging", response_model=List[SlimsSpimData])
+async def get_smartspim_imaging(
+    subject_id: Optional[str] = Query(
+        None,
+        alias="subject_id",
+        description="Subject ID",
+    ),
+    start_date_gte: Optional[str] = Query(
+        None,
+        alias="start_date_gte",
+        description="Date performed on or after. (ISO format)",
+    ),
+    end_date_lte: Optional[str] = Query(
+        None,
+        alias="end_date_lte",
+        description="Date performed on or before. (ISO format)",
+    ),
+    session: Slims = Depends(get_session),
+):
+    """
+    ## SmartSPIM imaging metadata
+    Retrieves SmartSPIM imaging information from SLIMS.
+    """
+    handler = ImagingSessionHandler(session)
+    spim_data = handler.get_spim_data_from_slims(
+        subject_id=subject_id,
+        start_date_greater_than_or_equal=start_date_gte,
+        end_date_less_than_or_equal=end_date_lte,
+    )
+    if len(spim_data) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return spim_data
