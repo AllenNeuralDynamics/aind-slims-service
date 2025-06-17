@@ -17,7 +17,10 @@ from aind_slims_service_server.main import app
 from aind_slims_service_server.models import (
     EcephysRewardSpouts,
     EcephysStreamModule,
+    HistologyReagentData,
+    HistologyWashData,
     SlimsEcephysData,
+    SlimsHistologyData,
     SlimsSpimData,
 )
 
@@ -228,6 +231,67 @@ def test_imaging_data():
                 "Laser = 639, Emission Filter = 667/30"
             ),
             cell_segmentation_channels=None,
+        )
+    ]
+
+
+@pytest.fixture()
+def mock_get_histology_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw histology data."""
+    table_to_file = {
+        "Content": "content.json",
+        "ExperimentRun": "experiment_run.json",
+        "ExperimentRunStep": "experiment_run_step.json",
+        "ExperimentRunStepContent": "experiment_run_step_content.json",
+        "ExperimentTemplate": "experiment_template.json",
+        "ReferenceDataRecord": "reference_data_record.json",
+        "SOP": "sop.json",
+        "Source": "source.json",
+    }
+    return mock_slims_fetch(mocker, table_to_file, RESOURCES_DIR / "histology")
+
+
+@pytest.fixture(scope="session")
+def test_histology_data():
+    """Reusable expected histology reagent data for histology handler tests."""
+    return [
+        SlimsHistologyData(
+            procedure_name="SmartSPIM Refractive Index Matching",
+            experiment_run_created_on=datetime(
+                2025, 1, 29, 18, 24, 35, 574000, tzinfo=timezone.utc
+            ),
+            specimen_id="BRN00000002",
+            subject_id="754372",
+            protocol_id=(
+                '<a href="https://www.protocols.io/edit/'
+                'refractive-index-matching-ethyl-cinnamate-cukpwuvn" '
+                'target="_blank" '
+                'rel="nofollow noopener noreferrer">'
+                "Refractive Index Matching - Ethyl Cinnamate</a>"
+            ),
+            protocol_name=(
+                "Refractive Index Matching - Ethyl Cinnamate (UNPUBLISHED)"
+            ),
+            washes=[
+                HistologyWashData(
+                    wash_name="Refractive Index Matching Wash",
+                    wash_type="Refractive Index Matching",
+                    start_time=datetime(
+                        2025, 1, 24, 18, 40, 0, tzinfo=timezone.utc
+                    ),
+                    end_time=datetime(
+                        2025, 1, 27, 18, 40, 0, tzinfo=timezone.utc
+                    ),
+                    modified_by="PersonM",
+                    reagents=[
+                        HistologyReagentData(
+                            name="112372-100G",
+                            source=None,
+                            lot_number="stbk5149",
+                        )
+                    ],
+                )
+            ],
         )
     ]
 

@@ -35,6 +35,13 @@ class TestMain:
         response = client.get("/smartspim_imaging?subject_id=744742")
         assert 200 == response.status_code
 
+    def test_get_histology_data(
+        self, client: TestClient, mock_get_histology_data: MagicMock
+    ):
+        """Tests histology data endpoint"""
+        response = client.get("/histology?subject_id=754372")
+        assert 200 == response.status_code
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

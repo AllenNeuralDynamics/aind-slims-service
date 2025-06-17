@@ -104,3 +104,35 @@ class SlimsSpimData(BaseModel):
     stitching_channels: Optional[str] = None
     ccf_registration_channels: Optional[str] = None
     cell_segmentation_channels: Optional[List[str]] = None
+
+
+class HistologyReagentData(BaseModel):
+    """Expected reagent information from SLIMS."""
+
+    name: Optional[str] = None
+    source: Optional[str] = None
+    lot_number: Optional[str] = None
+
+
+class HistologyWashData(BaseModel):
+    """Expected wash information from SLIMS."""
+
+    wash_name: Optional[str] = None
+    wash_type: Optional[str] = None
+    start_time: Optional[AwareDatetime] = None
+    end_time: Optional[AwareDatetime] = None
+    modified_by: Optional[str] = None
+    reagents: List[HistologyReagentData] = []
+    mass: Optional[Decimal] = None
+
+
+class SlimsHistologyData(BaseModel):
+    """Expected Model that needs to be extracted from SLIMS."""
+
+    procedure_name: Optional[str] = None
+    experiment_run_created_on: Optional[AwareDatetime] = None
+    specimen_id: Optional[str] = None
+    subject_id: Optional[str] = None
+    protocol_id: Optional[str] = None
+    protocol_name: Optional[str] = None
+    washes: List[HistologyWashData] = []
