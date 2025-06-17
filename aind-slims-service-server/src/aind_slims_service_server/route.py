@@ -6,18 +6,16 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from slims.slims import Slims
 
 from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
-from aind_slims_service_server.handlers.histology import (
-    HistologySessionHandler,
-)
-from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
+from aind_slims_service_server.handlers.histology import HistologySessionHandler
+from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.models import (
     HealthCheck,
     SlimsEcephysData,
-    SlimsHistologyData,
     SlimsSpimData,
+    SlimsHistologyData
 )
 from aind_slims_service_server.session import get_session
 
@@ -154,26 +152,25 @@ async def get_smartspim_imaging(
         raise HTTPException(status_code=404, detail="Not found")
     return spim_data
 
-
 @router.get("/histology", response_model=List[SlimsHistologyData])
 async def get_histology_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["750108"],
+        examples=["744742"],
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2025-02-12T00:00:00", "2025-02-12", "2025-02-12T00:00:00Z"],
+        examples=["2025-02-06T00:00:00", "2025-02-06", "2025-02-06T00:00:00Z"],
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2025-02-13T00:00:00", "2025-02-13", "2025-02-13T00:00:00Z"],
+        examples=["2025-02-07T00:00:00", "2025-02-07", "2025-02-07T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):

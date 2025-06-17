@@ -1,4 +1,4 @@
-"""Tests methods in handler module"""
+"""Tests methods in histology handler module"""
 
 from typing import List
 from unittest.mock import MagicMock
@@ -49,7 +49,7 @@ class TestHistologySessionHandler:
         G, root_nodes = handler._get_graph()
 
         hist_data = handler._parse_graph(
-            g=G, root_nodes=root_nodes, subject_id=None
+            g=G, root_nodes=root_nodes, subject_id="754372"
         )
         assert test_histology_data == hist_data
 

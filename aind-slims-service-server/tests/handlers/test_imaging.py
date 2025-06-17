@@ -1,4 +1,4 @@
-"""Tests methods in ssmartspim imaging handler module"""
+"""Tests methods in smartspim imaging handler module"""
 
 from typing import List
 from unittest.mock import MagicMock
