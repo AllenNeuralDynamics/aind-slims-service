@@ -80,3 +80,27 @@ class SlimsEcephysData(BaseModel):
     stream_modules: Optional[List[EcephysStreamModule]] = []
     daq_names: Optional[List[str]] = None
     camera_names: Optional[List[str]] = None
+
+
+class SlimsSpimData(BaseModel):
+    """Expected Model that needs to be extracted from SLIMS"""
+
+    experiment_run_created_on: Optional[AwareDatetime] = None
+    specimen_id: Optional[str] = None
+    subject_id: Optional[str] = None
+    protocol_name: Optional[str] = None
+    protocol_id: Optional[str] = None
+    date_performed: Optional[int] = None
+    chamber_immersion_medium: Optional[str] = None
+    sample_immersion_medium: Optional[str] = None
+    chamber_refractive_index: Optional[Decimal] = None
+    sample_refractive_index: Optional[Decimal] = None
+    instrument_id: Optional[str] = None
+    experimenter_name: Optional[str] = None
+    z_direction: Optional[str] = None
+    y_direction: Optional[str] = None
+    x_direction: Optional[str] = None
+    imaging_channels: Optional[List[str]] = None
+    stitching_channels: Optional[str] = None
+    ccf_registration_channels: Optional[str] = None
+    cell_segmentation_channels: Optional[List[str]] = None

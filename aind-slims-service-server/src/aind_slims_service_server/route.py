@@ -9,7 +9,12 @@ from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
-from aind_slims_service_server.models import HealthCheck, SlimsEcephysData
+from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
+from aind_slims_service_server.models import (
+    HealthCheck,
+    SlimsEcephysData,
+    SlimsSpimData,
+)
 from aind_slims_service_server.session import get_session
 
 router = APIRouter()
@@ -47,16 +52,19 @@ async def get_ecephys_sessions(
         None,
         alias="session_name",
         description="Name of the session",
+        examples=["ecephys_750108_2024-12-23_14-51-45"],
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Experiment run created on or after. (ISO format)",
+        examples=["2025-04-10T00:00:00", "2025-04-10", "2025-04-10T00:00:00Z"],
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Experiment run created on or before. (ISO format)",
+        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
@@ -104,3 +112,40 @@ async def get_aind_instrument(
     if len(instrument_data) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return instrument_data
+
+
+@router.get("/smartspim_imaging", response_model=List[SlimsSpimData])
+async def get_smartspim_imaging(
+    subject_id: Optional[str] = Query(
+        None,
+        alias="subject_id",
+        description="Subject ID",
+        examples=["744742"],
+    ),
+    start_date_gte: Optional[str] = Query(
+        None,
+        alias="start_date_gte",
+        description="Date performed on or after. (ISO format)",
+        examples=["2025-02-12T00:00:00", "2025-02-12", "2025-02-12T00:00:00Z"],
+    ),
+    end_date_lte: Optional[str] = Query(
+        None,
+        alias="end_date_lte",
+        description="Date performed on or before. (ISO format)",
+        examples=["2025-02-13T00:00:00", "2025-02-13", "2025-02-13T00:00:00Z"],
+    ),
+    session: Slims = Depends(get_session),
+):
+    """
+    ## SmartSPIM imaging metadata
+    Retrieves SmartSPIM imaging information from SLIMS.
+    """
+    handler = ImagingSessionHandler(session)
+    spim_data = handler.get_spim_data_from_slims(
+        subject_id=subject_id,
+        start_date_greater_than_or_equal=start_date_gte,
+        end_date_less_than_or_equal=end_date_lte,
+    )
+    if len(spim_data) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return spim_data

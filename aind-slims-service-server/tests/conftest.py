@@ -18,6 +18,7 @@ from aind_slims_service_server.models import (
     EcephysRewardSpouts,
     EcephysStreamModule,
     SlimsEcephysData,
+    SlimsSpimData,
 )
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
@@ -168,6 +169,67 @@ def mock_get_instrument_data(mocker: MockFixture) -> MagicMock:
         return_value=mock_response,
     )
     return fetch_mock
+
+
+@pytest.fixture()
+def mock_get_imaging_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw imaging data."""
+    table_to_file = {
+        "Content": "content.json",
+        "ExperimentRun": "experiment_run.json",
+        "ExperimentRunStep": "experiment_run_step.json",
+        "ExperimentRunStepContent": "experiment_run_step_content.json",
+        "ExperimentTemplate": "experiment_template.json",
+        "ReferenceDataRecord": "reference_data_record.json",
+        "Result": "result.json",
+        "SOP": "sop.json",
+        "OrderContent": "order_content.json",
+        "Order": "order.json",
+        "User": "user.json",
+    }
+    return mock_slims_fetch(mocker, table_to_file, RESOURCES_DIR / "imaging")
+
+
+@pytest.fixture(scope="session")
+def test_imaging_data():
+    """Reusable expected SlimsSpimData for imaging handler tests."""
+    return [
+        SlimsSpimData(
+            experiment_run_created_on=1739383241200,
+            specimen_id="BRN00000018",
+            subject_id="744742",
+            protocol_name="Imaging cleared mouse brains on SmartSPIM",
+            protocol_id=(
+                "<a href="
+                '"https://dx.doi.org/10.17504/protocols.io.3byl4jo1rlo5/'
+                'v1" '
+                'target="_blank" '
+                'rel="nofollow noopener noreferrer">'
+                "Imaging cleared mouse brains on SmartSPIM"
+                "</a>"
+            ),
+            date_performed=1739383260000,
+            chamber_immersion_medium="Ethyl Cinnamate",
+            sample_immersion_medium="Ethyl Cinnamate",
+            chamber_refractive_index=Decimal(str(1.557)),
+            sample_refractive_index=Decimal(str(1.557)),
+            instrument_id="440_SmartSPIM1_20240327",
+            experimenter_name="Person R",
+            z_direction="Superior to Inferior",
+            y_direction="Anterior to Posterior",
+            x_direction="Left to Right",
+            imaging_channels=[
+                "Laser = 488; Emission Filter = 525/45",
+                "Laser = 561; Emission Filter = 593/40",
+                "Laser = 639; Emission Filter = 667/30",
+            ],
+            stitching_channels="Laser = 639, Emission Filter = 667/30",
+            ccf_registration_channels=(
+                "Laser = 639, Emission Filter = 667/30"
+            ),
+            cell_segmentation_channels=None,
+        )
+    ]
 
 
 @pytest.fixture(scope="session")
