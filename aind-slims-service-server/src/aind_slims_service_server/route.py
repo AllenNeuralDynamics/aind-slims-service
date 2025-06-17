@@ -9,13 +9,15 @@ from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
-from aind_slims_service_server.handlers.histology import HistologySessionHandler
+from aind_slims_service_server.handlers.histology import (
+    HistologySessionHandler,
+)
 from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.models import (
     HealthCheck,
     SlimsEcephysData,
     SlimsSpimData,
-    SlimsHistologyData
+    SlimsHistologyData,
 )
 from aind_slims_service_server.session import get_session
 
@@ -151,6 +153,7 @@ async def get_smartspim_imaging(
     if len(spim_data) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return spim_data
+
 
 @router.get("/histology", response_model=List[SlimsHistologyData])
 async def get_histology_data(
