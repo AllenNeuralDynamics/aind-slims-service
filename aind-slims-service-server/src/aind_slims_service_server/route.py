@@ -52,6 +52,7 @@ async def get_ecephys_sessions(
         None,
         alias="session_name",
         description="Name of the session",
+        examples=["ecephys_750108_2024-12-23_14-51-45"],
     ),
     start_date_gte: Optional[str] = Query(
         None,
@@ -63,7 +64,7 @@ async def get_ecephys_sessions(
         None,
         alias="end_date_lte",
         description="Experiment run created on or before. (ISO format)",
-        examples=["2025-05-10T00:00:00", "2025-05-10", "2025-05-10T00:00:00Z"],
+        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
@@ -119,19 +120,19 @@ async def get_smartspim_imaging(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["792102", "744742"],
+        examples=["744742"],
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2025-06-05T00:00:00", "2025-06-05", "2025-06-05T00:00:00Z"],
+        examples=["2025-02-12T00:00:00", "2025-02-12", "2025-02-12T00:00:00Z"],
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2025-06-06T00:00:00", "2025-06-06", "2025-06-06T00:00:00Z"],
+        examples=["2025-02-13T00:00:00", "2025-02-13", "2025-02-13T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
