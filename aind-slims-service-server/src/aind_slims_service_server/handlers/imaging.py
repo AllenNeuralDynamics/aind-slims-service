@@ -282,8 +282,8 @@ class ImagingSessionHandler(SlimsTableHandler):
     def get_spim_data_from_slims(
         self,
         subject_id: Optional[str] = None,
-        start_date_greater_than_or_equal: Optional[datetime] = None,
-        end_date_less_than_or_equal: Optional[datetime] = None,
+        start_date_greater_than_or_equal: Optional[str] = None,
+        end_date_less_than_or_equal: Optional[str] = None,
     ) -> List[SlimsSpimData]:
         """
         Get SPIM data from SLIMS.
@@ -312,8 +312,12 @@ class ImagingSessionHandler(SlimsTableHandler):
             raise ValueError("subject_id must not be empty!")
 
         G, root_nodes = self._get_graph(
-            start_date_greater_than_or_equal=start_date_greater_than_or_equal,
-            end_date_less_than_or_equal=end_date_less_than_or_equal,
+            start_date_greater_than_or_equal=self.parse_date(
+                start_date_greater_than_or_equal
+            ),
+            end_date_less_than_or_equal=self.parse_date(
+                end_date_less_than_or_equal
+            ),
         )
 
         spim_data = self._parse_graph(
