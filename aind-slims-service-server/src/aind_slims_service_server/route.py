@@ -117,6 +117,7 @@ async def get_smartspim_imaging(
         None,
         alias="subject_id",
         description="Subject ID",
+        examples=["744742", "792102"],
     ),
     start_date_gte: Optional[str] = Query(
         None,
