@@ -22,6 +22,7 @@ from aind_slims_service_server.models import (
     SlimsEcephysData,
     SlimsHistologyData,
     SlimsSpimData,
+    SlimsWaterRestrictionData,
 )
 
 RESOURCES_DIR = Path(os.path.dirname(os.path.realpath(__file__))) / "resources"
@@ -292,6 +293,39 @@ def test_histology_data():
                     ],
                 )
             ],
+        )
+    ]
+
+
+@pytest.fixture()
+def mock_get_water_restriction_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw water restriction data."""
+    table_to_file = {
+        "ContentEvent": "content_event.json",
+        "Content": "content.json",
+    }
+    return mock_slims_fetch(
+        mocker, table_to_file, RESOURCES_DIR / "water_restriction"
+    )
+
+
+@pytest.fixture(scope="session")
+def test_water_restriction_data():
+    """Reusable expected data for water restriction handler tests."""
+    return [
+        SlimsWaterRestrictionData(
+            content_event_created_on=datetime(
+                2024, 12, 13, 19, 43, 34, 103000, tzinfo=timezone.utc
+            ),
+            subject_id="762287",
+            start_date=datetime(
+                2024, 12, 13, 19, 43, 32, 354000, tzinfo=timezone.utc
+            ),
+            end_date=None,
+            assigned_by="person.name",
+            target_weight_fraction=Decimal("0.85"),
+            baseline_weight=Decimal("28.23"),
+            weight_unit="g",
         )
     ]
 

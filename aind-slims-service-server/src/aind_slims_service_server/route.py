@@ -12,12 +12,16 @@ from aind_slims_service_server.handlers.instrument import (
 from aind_slims_service_server.handlers.histology import (
     HistologySessionHandler,
 )
+from aind_slims_service_server.handlers.water_restriction import (
+    WaterRestrictionSessionHandler,
+)
 from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.models import (
     HealthCheck,
     SlimsEcephysData,
     SlimsSpimData,
     SlimsHistologyData,
+    SlimsWaterRestrictionData,
 )
 from aind_slims_service_server.session import get_session
 
@@ -190,3 +194,42 @@ async def get_histology_data(
     if len(histology_data) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return histology_data
+
+
+@router.get(
+    "/water_restriction", response_model=List[SlimsWaterRestrictionData]
+)
+async def get_water_restriction_data(
+    subject_id: Optional[str] = Query(
+        None,
+        alias="subject_id",
+        description="Subject ID",
+        examples=["762287"],
+    ),
+    start_date_gte: Optional[str] = Query(
+        None,
+        alias="start_date_gte",
+        description="Date performed on or after. (ISO format)",
+        examples=["2024-12-13T00:00:00", "2024-12-13", "2024-12-13T00:00:00Z"],
+    ),
+    end_date_lte: Optional[str] = Query(
+        None,
+        alias="end_date_lte",
+        description="Date performed on or before. (ISO format)",
+        examples=["2024-12-14T00:00:00", "2024-12-14", "2025-12-14T00:00:00Z"],
+    ),
+    session: Slims = Depends(get_session),
+):
+    """
+    ## Water Restriction data
+    Retrieves water restriction information from SLIMS.
+    """
+    handler = WaterRestrictionSessionHandler(session)
+    water_restriction_data = handler.get_water_restriction_data_from_slims(
+        subject_id=subject_id,
+        start_date_greater_than_or_equal=start_date_gte,
+        end_date_less_than_or_equal=end_date_lte,
+    )
+    if len(water_restriction_data) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return water_restriction_data

@@ -136,3 +136,16 @@ class SlimsHistologyData(BaseModel):
     protocol_id: Optional[str] = None
     protocol_name: Optional[str] = None
     washes: List[HistologyWashData] = []
+
+
+class SlimsWaterRestrictionData(BaseModel):
+    """Expected Model that needs to be extracted from SLIMS."""
+
+    content_event_created_on: Optional[AwareDatetime] = None
+    subject_id: Optional[str] = None
+    start_date: Optional[AwareDatetime] = None
+    end_date: Optional[AwareDatetime] = None
+    assigned_by: Optional[str] = None
+    target_weight_fraction: Optional[Decimal] = None
+    baseline_weight: Optional[Decimal] = None
+    weight_unit: Optional[str] = None

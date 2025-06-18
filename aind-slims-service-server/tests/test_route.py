@@ -101,6 +101,26 @@ class TestRoutes:
         assert response.status_code == 404
         assert response.json() == expected_response
 
+    def test_get_200_water_restriction_data(
+        self, client: TestClient, mock_get_water_restriction_data: MagicMock
+    ):
+        """Tests a good response for water restriction data"""
+        response = client.get("/water_restriction?subject_id=762287")
+        assert response.status_code == 200
+        data = response.json()
+        assert isinstance(data, list)
+        assert len(data) > 0
+        assert data[0]["subject_id"] == "762287"
+
+    def test_get_404_water_restriction_data(
+        self, client: TestClient, mock_get_water_restriction_data: MagicMock
+    ):
+        """Tests a missing water restriction data response"""
+        response = client.get("/water_restriction?subject_id=0")
+        expected_response = {"detail": "Not found"}
+        assert response.status_code == 404
+        assert response.json() == expected_response
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
