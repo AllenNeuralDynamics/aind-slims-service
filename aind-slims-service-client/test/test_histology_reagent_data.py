@@ -14,10 +14,10 @@
 
 import unittest
 
-from aind_slims_service_client.models.health_check import HealthCheck
+from aind_slims_service_client.models.histology_reagent_data import HistologyReagentData
 
-class TestHealthCheck(unittest.TestCase):
-    """HealthCheck unit test stubs"""
+class TestHistologyReagentData(unittest.TestCase):
+    """HistologyReagentData unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,26 +25,27 @@ class TestHealthCheck(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> HealthCheck:
-        """Test HealthCheck
+    def make_instance(self, include_optional) -> HistologyReagentData:
+        """Test HistologyReagentData
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `HealthCheck`
+        # uncomment below to create an instance of `HistologyReagentData`
         """
-        model = HealthCheck()
+        model = HistologyReagentData()
         if include_optional:
-            return HealthCheck(
-                status = 'OK',
-                service_version = '0.1.0'
+            return HistologyReagentData(
+                name = '',
+                source = '',
+                lot_number = ''
             )
         else:
-            return HealthCheck(
+            return HistologyReagentData(
         )
         """
 
-    def testHealthCheck(self):
-        """Test HealthCheck"""
+    def testHistologyReagentData(self):
+        """Test HistologyReagentData"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 
