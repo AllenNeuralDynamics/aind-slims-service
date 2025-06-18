@@ -136,3 +136,65 @@ class SlimsHistologyData(BaseModel):
     protocol_id: Optional[str] = None
     protocol_name: Optional[str] = None
     washes: List[HistologyWashData] = []
+
+class SlimsViralMaterialData(BaseModel):
+    """Model for viral material data."""
+
+    content_category: Optional[str] = "Viral Materials"
+    content_type: Optional[str] = None
+    content_created_on: Optional[AwareDatetime] = None
+    content_modified_on: Optional[AwareDatetime] = None
+    viral_solution_type: Optional[str] = None
+    virus_name: Optional[str] = None
+    lot_number: Optional[str] = None
+    lab_team: Optional[str] = None
+    virus_type: Optional[str] = None
+    virus_serotype: Optional[str] = None
+    virus_plasmid_number: Optional[str] = None
+    name: Optional[str] = None
+    dose: Optional[Decimal] = None
+    dose_unit: Optional[str] = None
+    titer: Optional[Decimal] = None
+    titer_unit: Optional[str] = "GC/ml"
+    volume: Optional[Decimal] = None
+    volume_unit: Optional[str] = None
+    date_made: Optional[AwareDatetime] = None
+    intake_date: Optional[AwareDatetime] = None
+    storage_temperature: Optional[str] = None
+    special_storage_guidelines: Optional[List[str]] = []
+    special_handling_guidelines: Optional[List[str]] = []
+    parent_name: Optional[str] = None
+    mix_count: Optional[int] = None
+    derivation_count: Optional[int] = None
+    ingredient_count: Optional[int] = None
+
+
+class SlimsViralInjectionData(BaseModel):
+    """ "Model for viral injection data."""
+
+    content_category: Optional[str] = "Viral Materials"
+    content_type: Optional[str] = "Viral Injection"
+    content_created_on: Optional[AwareDatetime] = None
+    content_modified_on: Optional[AwareDatetime] = None
+    name: Optional[str] = None
+    viral_injection_buffer: Optional[str] = None
+    volume: Optional[Decimal] = None
+    volume_unit: Optional[str] = None
+    labeling_protein: Optional[str] = None
+    date_made: Optional[AwareDatetime] = None
+    intake_date: Optional[AwareDatetime] = None
+    storage_temperature: Optional[str] = None
+    special_storage_guidelines: Optional[List[str]] = []
+    special_handling_guidelines: Optional[List[str]] = []
+    mix_count: Optional[int] = None
+    derivation_count: Optional[int] = None
+    ingredient_count: Optional[int] = None
+
+    # From ORDER table
+    assigned_mice: Optional[List[str]] = []
+    requested_for_date: Optional[int] = None
+    planned_injection_date: Optional[AwareDatetime] = None
+    planned_injection_time: Optional[AwareDatetime] = None
+    order_created_on: Optional[int] = None
+
+    viral_materials: Optional[List[SlimsViralMaterialData]] = []
