@@ -292,9 +292,9 @@ class ImagingSessionHandler(SlimsTableHandler):
         ----------
         subject_id : str | None
           Labtracks ID of mouse. If None, then no filter will be performed.
-        start_date_greater_than_or_equal : datetime | None
+        start_date_greater_than_or_equal : str | None
           Filter experiment runs that were created on or after this datetime.
-        end_date_less_than_or_equal : datetime | None
+        end_date_less_than_or_equal : str | None
           Filter experiment runs that were created on or before this datetime.
 
         Returns

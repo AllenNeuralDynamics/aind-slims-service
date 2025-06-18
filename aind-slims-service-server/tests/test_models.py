@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from aind_slims_service_server.models import (
     HealthCheck,
     SlimsEcephysData,
+    SlimsHistologyData,
     SlimsSpimData,
 )
 
@@ -69,6 +70,30 @@ class TestSlimsSpimData(unittest.TestCase):
         )
         spim_data.model_validate(spim_data.model_dump())
         self.assertEqual(expeeted_dt, spim_data.experiment_run_created_on)
+
+
+class TestSlimsHistologyData(unittest.TestCase):
+    """Tests for SlimsHistologyData class"""
+
+    def test_constructor(self):
+        """Basic test for class constructor"""
+        histology_data = SlimsHistologyData(
+            subject_id="754372",
+        )
+        self.assertEqual("754372", histology_data.subject_id)
+
+    def test_date_str_conversion(self):
+        """Test date string conversion"""
+
+        date_str = "2025-01-01T00:00:00Z"
+        expected_dt = datetime(2025, 1, 1, 0, 0, tzinfo=timezone.utc)
+
+        histology_data = SlimsHistologyData(
+            subject_id="754372",
+            experiment_run_created_on=date_str,
+        )
+        histology_data.model_validate(histology_data.model_dump())
+        self.assertEqual(expected_dt, histology_data.experiment_run_created_on)
 
 
 if __name__ == "__main__":
