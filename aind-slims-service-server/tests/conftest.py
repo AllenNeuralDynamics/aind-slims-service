@@ -22,6 +22,8 @@ from aind_slims_service_server.models import (
     SlimsEcephysData,
     SlimsHistologyData,
     SlimsSpimData,
+    SlimsViralInjectionData,
+    SlimsViralMaterialData,
     SlimsWaterRestrictionData,
 )
 
@@ -326,6 +328,82 @@ def test_water_restriction_data():
             target_weight_fraction=Decimal("0.85"),
             baseline_weight=Decimal("28.23"),
             weight_unit="g",
+        )
+    ]
+
+
+@pytest.fixture()
+def mock_get_viral_injection_data(mocker: MockFixture) -> MagicMock:
+    """Expected raw viral injection data."""
+    table_to_file = {
+        "Content": "content.json",
+        "ContentRelation": "content_relation.json",
+        "Order": "order.json",
+        "ContentType": "content_type.json",
+    }
+    return mock_slims_fetch(
+        mocker, table_to_file, RESOURCES_DIR / "viral_injection"
+    )
+
+
+@pytest.fixture(scope="session")
+def test_viral_injection_data():
+    """Reusable expected data for viral injection handler tests."""
+    return [
+        SlimsViralInjectionData(
+            content_category="Viral Materials",
+            content_type="Viral injection",
+            content_created_on=None,
+            content_modified_on=None,
+            name="INJ00000002",
+            viral_injection_buffer="AAV Buffer",
+            volume=Decimal(str(98.56)),
+            volume_unit="&mu;l",
+            labeling_protein="tdTomato",
+            date_made=1746014400000,
+            intake_date=None,
+            storage_temperature="4 C",
+            special_storage_guidelines=["Light sensitive storage"],
+            special_handling_guidelines=["BSL - 1"],
+            mix_count=None,
+            derivation_count=None,
+            ingredient_count=None,
+            assigned_mice=["614178"],
+            requested_for_date=None,
+            planned_injection_date=1746705600000,
+            planned_injection_time=None,
+            order_created_on=1746717795853,
+            viral_materials=[
+                SlimsViralMaterialData(
+                    content_category="Viral Materials",
+                    content_type="Viral solution",
+                    content_created_on=1746049926016,
+                    content_modified_on=None,
+                    viral_solution_type="Injection Dilution",
+                    virus_name="7x-TRE-tDTomato",
+                    lot_number="VT5355g",
+                    lab_team="Molecular Anatomy",
+                    virus_type="AAV",
+                    virus_serotype="PhP.eB",
+                    virus_plasmid_number="AiP300001",
+                    name="VRS00000029",
+                    dose=Decimal(str(180000000000)),
+                    dose_unit=None,
+                    titer=Decimal(str(24200000000000)),
+                    titer_unit="GC/ml",
+                    volume=Decimal(str(8.55)),
+                    volume_unit="&mu;l",
+                    date_made=1746049926079,
+                    intake_date=None,
+                    storage_temperature="-80 C",
+                    special_storage_guidelines=["Avoid freeze - thaw cycles"],
+                    special_handling_guidelines=["BSL - 1"],
+                    parent_name=None,
+                    mix_count=1,
+                    derivation_count=0,
+                    ingredient_count=0,
+                )
+            ],
         )
     ]
 

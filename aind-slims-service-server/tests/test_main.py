@@ -49,6 +49,13 @@ class TestMain:
         response = client.get("/water_restriction?subject_id=762287")
         assert 200 == response.status_code
 
+    def test_get_viral_injection_data(
+        self, client: TestClient, mock_get_viral_injection_data: MagicMock
+    ):
+        """Tests viral injection data endpoint"""
+        response = client.get("/viral_injections?subject_id=614178")
+        assert 200 == response.status_code
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

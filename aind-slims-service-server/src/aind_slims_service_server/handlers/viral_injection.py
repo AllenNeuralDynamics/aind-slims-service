@@ -3,18 +3,21 @@ Module to handle fetching viral injection data from slims
 and parsing it to a model.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, Tuple
 
 from networkx import DiGraph, descendants
-from pydantic import BaseModel
 from slims.criteria import equals
 
 from aind_slims_service_server.handlers.table_handler import (
     SlimsTableHandler,
 )
-from aind_slims_service_server.models import SlimsViralInjectionData, SlimsViralMaterialData
+from aind_slims_service_server.models import (
+    SlimsViralInjectionData,
+    SlimsViralMaterialData,
+)
+
 
 class ViralInjectionSessionHandler(SlimsTableHandler):
     """Class to handle getting Viral Injection info from SLIMS."""
@@ -45,8 +48,11 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                 root_row, "cntn_createdOn"
             )
             vi_data.content_created_on = (
-                None if content_created_on_ts is None
-                else datetime.fromisoformat(content_created_on_ts)
+                None
+                if content_created_on_ts is None
+                else datetime.fromtimestamp(
+                    content_created_on_ts / 1000, tz=timezone.utc
+                )
             )
             vi_data.content_category = self.get_attr_or_none(
                 root_row, "cntn_fk_category", "displayValue"
@@ -55,15 +61,21 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                 root_row, "cntn_fk_contentType", "displayValue"
             )
             vi_data.content_created_on = (
-                None if content_created_on_ts is None
-                else datetime.fromisoformat(content_created_on_ts)
+                None
+                if content_created_on_ts is None
+                else datetime.fromtimestamp(
+                    content_created_on_ts / 1000, tz=timezone.utc
+                )
             )
             content_modified_on_ts = self.get_attr_or_none(
                 root_row, "cntn_modifiedOn"
             )
             vi_data.content_modified_on = (
-                None if content_modified_on_ts is None
-                else datetime.fromisoformat(content_modified_on_ts)
+                None
+                if content_modified_on_ts is None
+                else datetime.fromtimestamp(
+                    content_modified_on_ts / 1000, tz=timezone.utc
+                )
             )
             vi_data.viral_injection_buffer = self.get_attr_or_none(
                 root_row, "cntn_cf_fk_viralInjectionBuffer", "displayValue"
@@ -81,13 +93,21 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
             vi_data.name = self.get_attr_or_none(root_row, "cntn_id")
             date_made_ts = self.get_attr_or_none(root_row, "cntn_cf_dateMade")
             vi_data.date_made = (
-                None if date_made_ts is None
-                else datetime.fromisoformat(date_made_ts)
+                None
+                if date_made_ts is None
+                else datetime.fromtimestamp(
+                    date_made_ts / 1000, tz=timezone.utc
+                )
             )
-            intake_date_ts = self.get_attr_or_none(root_row, "cntn_cf_intakeDate_NA")
+            intake_date_ts = self.get_attr_or_none(
+                root_row, "cntn_cf_intakeDate_NA"
+            )
             vi_data.intake_date = (
-                None if intake_date_ts is None
-                else datetime.fromisoformat(intake_date_ts)
+                None
+                if intake_date_ts is None
+                else datetime.fromtimestamp(
+                    intake_date_ts / 1000, tz=timezone.utc
+                )
             )
             vi_data.storage_temperature = self.get_attr_or_none(
                 root_row, "cntn_cf_fk_storageTemp_dynChoice", "displayValue"
@@ -113,29 +133,41 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                         row, "ordr_cf_requestedForDate"
                     )
                     vi_data.requested_for_date = (
-                        None if requested_for_date_ts is None
-                        else datetime.fromisoformat(requested_for_date_ts)
+                        None
+                        if requested_for_date_ts is None
+                        else datetime.fromtimestamp(
+                            requested_for_date_ts / 1000, tz=timezone.utc
+                        )
                     )
                     planned_injection_date_ts = self.get_attr_or_none(
                         row, "ordr_plannedOnDate"
                     )
                     vi_data.planned_injection_date = (
-                        None if planned_injection_date_ts is None
-                        else datetime.fromisoformat(planned_injection_date_ts)
+                        None
+                        if planned_injection_date_ts is None
+                        else datetime.fromtimestamp(
+                            planned_injection_date_ts / 1000, tz=timezone.utc
+                        )
                     )
                     planned_injection_time_ts = self.get_attr_or_none(
                         row, "ordr_plannedOnTime"
                     )
                     vi_data.planned_injection_time = (
-                        None if planned_injection_time_ts is None
-                        else datetime.fromisoformat(planned_injection_time_ts)
+                        None
+                        if planned_injection_time_ts is None
+                        else datetime.fromtimestamp(
+                            planned_injection_time_ts / 1000, tz=timezone.utc
+                        )
                     )
                     order_created_on_ts = self.get_attr_or_none(
                         row, "ordr_createdOn"
                     )
                     vi_data.order_created_on = (
-                        None if order_created_on_ts is None
-                        else datetime.fromisoformat(order_created_on_ts)
+                        None
+                        if order_created_on_ts is None
+                        else datetime.fromtimestamp(
+                            order_created_on_ts / 1000, tz=timezone.utc
+                        )
                     )
                     vi_data.derivation_count = self.get_attr_or_none(
                         row, "derivedCount"
@@ -162,15 +194,21 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                         row, "cntn_createdOn"
                     )
                     vm_data.content_created_on = (
-                        None if content_created_on_ts is None
-                        else datetime.fromisoformat(content_created_on_ts)
+                        None
+                        if content_created_on_ts is None
+                        else datetime.fromtimestamp(
+                            content_created_on_ts / 1000, tz=timezone.utc
+                        )
                     )
                     content_modified_on_ts = self.get_attr_or_none(
                         row, "cntn_modifiedOn"
                     )
                     vm_data.content_modified_on = (
-                        None if content_modified_on_ts is None
-                        else datetime.fromisoformat(content_modified_on_ts)
+                        None
+                        if content_modified_on_ts is None
+                        else datetime.fromtimestamp(
+                            content_modified_on_ts / 1000, tz=timezone.utc
+                        )
                     )
                     vm_data.viral_solution_type = self.get_attr_or_none(
                         row, "cntn_cf_fk_viralSolutionType", "displayValue"
@@ -206,7 +244,9 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                     vm_data.titer_unit = self.get_attr_or_none(
                         row, "cntn_cf_titer", "unit"
                     )
-                    volume = self.get_attr_or_none(row, "cntn_cf_volumeRequired")
+                    volume = self.get_attr_or_none(
+                        row, "cntn_cf_volumeRequired"
+                    )
                     vm_data.volume = (
                         None if volume is None else Decimal(str(volume))
                     )
@@ -217,15 +257,21 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                         row, "cntn_cf_dateMade"
                     )
                     vm_data.date_made = (
-                        None if date_made_ts is None
-                        else datetime.fromisoformat(date_made_ts)
+                        None
+                        if date_made_ts is None
+                        else datetime.fromtimestamp(
+                            date_made_ts / 1000, tz=timezone.utc
+                        )
                     )
                     intake_date_ts = self.get_attr_or_none(
                         row, "cntn_cf_intakeDate_NA"
                     )
                     vm_data.intake_date = (
-                        None if intake_date_ts is None
-                        else datetime.fromisoformat(intake_date_ts)
+                        None
+                        if intake_date_ts is None
+                        else datetime.fromtimestamp(
+                            intake_date_ts / 1000, tz=timezone.utc
+                        )
                     )
                     vm_data.storage_temperature = self.get_attr_or_none(
                         row, "cntn_cf_fk_storageTemp_dynChoice", "displayValue"
@@ -235,10 +281,12 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
                         "cntn_cf_fk_specialStorageGuidelines",
                         "displayValues",
                     )
-                    vm_data.special_handling_guidelines = self.get_attr_or_none(
-                        row,
-                        "cntn_cf_fk_specialHandlingGuidelines",
-                        "displayValues",
+                    vm_data.special_handling_guidelines = (
+                        self.get_attr_or_none(
+                            row,
+                            "cntn_cf_fk_specialHandlingGuidelines",
+                            "displayValues",
+                        )
                     )
                     vm_data.derivation_count = self.get_attr_or_none(
                         row, "derivedCount"
@@ -340,7 +388,8 @@ class ViralInjectionSessionHandler(SlimsTableHandler):
         Parameters
         ----------
         subject_id : Optional[str]
-            The subject ID to filter the data by. If None, all subjects are included.
+            The subject ID to filter the data by.
+            If None, all subjects are included.
         start_date_greater_than_or_equal : Optional[str]
             The start date to filter the data by, in ISO format (YYYY-MM-DD).
             If None, no start date filter is applied.

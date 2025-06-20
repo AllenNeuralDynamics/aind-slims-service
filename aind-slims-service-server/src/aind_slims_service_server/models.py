@@ -151,18 +151,6 @@ class SlimsWaterRestrictionData(BaseModel):
     weight_unit: Optional[str] = None
 
 
-class SlimsWaterRestrictionData(BaseModel):
-    """Expected Model that needs to be extracted from SLIMS."""
-
-    content_event_created_on: Optional[AwareDatetime] = None
-    subject_id: Optional[str] = None
-    start_date: Optional[AwareDatetime] = None
-    end_date: Optional[AwareDatetime] = None
-    assigned_by: Optional[str] = None
-    target_weight_fraction: Optional[Decimal] = None
-    baseline_weight: Optional[Decimal] = None
-    weight_unit: Optional[str] = None
-
 class SlimsViralMaterialData(BaseModel):
     """Model for viral material data."""
 
@@ -221,6 +209,6 @@ class SlimsViralInjectionData(BaseModel):
     requested_for_date: Optional[int] = None
     planned_injection_date: Optional[AwareDatetime] = None
     planned_injection_time: Optional[AwareDatetime] = None
-    order_created_on: Optional[int] = None
+    order_created_on: Optional[AwareDatetime] = None
 
     viral_materials: Optional[List[SlimsViralMaterialData]] = []
