@@ -42,6 +42,13 @@ class TestMain:
         response = client.get("/histology?subject_id=754372")
         assert 200 == response.status_code
 
+    def test_get_water_restriction_data(
+        self, client: TestClient, mock_get_water_restriction_data: MagicMock
+    ):
+        """Tests water restriction data endpoint"""
+        response = client.get("/water_restriction?subject_id=762287")
+        assert 200 == response.status_code
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
