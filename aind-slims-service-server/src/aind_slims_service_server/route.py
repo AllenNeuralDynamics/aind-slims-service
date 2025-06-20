@@ -40,7 +40,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-async def get_health() -> HealthCheck:
+def get_health() -> HealthCheck:
     """
     ## Endpoint to perform a healthcheck on.
 
@@ -54,7 +54,7 @@ async def get_health() -> HealthCheck:
     "/ecephys_sessions",
     response_model=List[SlimsEcephysData],
 )
-async def get_ecephys_sessions(
+def get_ecephys_sessions(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -102,7 +102,7 @@ async def get_ecephys_sessions(
     "/aind_instruments/{input_id}",
     response_model=List[Dict[str, Any]],
 )
-async def get_aind_instrument(
+def get_aind_instrument(
     input_id: str = Path(
         ..., examples=["440_SmartSPIM1_20240327"], description="Instrument ID"
     ),
@@ -127,7 +127,7 @@ async def get_aind_instrument(
 
 
 @router.get("/smartspim_imaging", response_model=List[SlimsSpimData])
-async def get_smartspim_imaging(
+def get_smartspim_imaging(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -164,7 +164,7 @@ async def get_smartspim_imaging(
 
 
 @router.get("/histology", response_model=List[SlimsHistologyData])
-async def get_histology_data(
+def get_histology_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -203,7 +203,7 @@ async def get_histology_data(
 @router.get(
     "/water_restriction", response_model=List[SlimsWaterRestrictionData]
 )
-async def get_water_restriction_data(
+def get_water_restriction_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -220,7 +220,7 @@ async def get_water_restriction_data(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2024-12-14T00:00:00", "2024-12-14", "2025-12-14T00:00:00Z"],
+        examples=["2024-12-14T00:00:00", "2024-12-14", "2024-12-14T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
@@ -240,7 +240,7 @@ async def get_water_restriction_data(
 
 
 @router.get("/viral_injections", response_model=List[SlimsViralInjectionData])
-async def get_viral_injections(
+def get_viral_injections(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -251,13 +251,13 @@ async def get_viral_injections(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2024-12-13T00:00:00", "2024-12-13", "2024-12-13T00:00:00Z"],
+        examples=["2025-04-10T00:00:00", "2025-04-10", "2025-04-10T00:00:00Z"],
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2024-12-14T00:00:00", "2024-12-14", "2025-12-14T00:00:00Z"],
+        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
