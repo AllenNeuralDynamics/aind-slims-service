@@ -121,6 +121,26 @@ class TestRoutes:
         assert response.status_code == 404
         assert response.json() == expected_response
 
+    def test_get_200_viral_injection_data(
+        self, client: TestClient, mock_get_viral_injection_data: MagicMock
+    ):
+        """Tests a good response for viral injection data"""
+        response = client.get("/viral_injections?subject_id=614178")
+        assert response.status_code == 200
+        data = response.json()
+        assert isinstance(data, list)
+        assert len(data) > 0
+        assert data[0]["assigned_mice"] == ["614178"]
+
+    def test_get_404_viral_injection_data(
+        self, client: TestClient, mock_get_viral_injection_data: MagicMock
+    ):
+        """Tests a missing viral injection data response"""
+        response = client.get("/viral_injections?subject_id=0")
+        expected_response = {"detail": "Not found"}
+        assert response.status_code == 404
+        assert response.json() == expected_response
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

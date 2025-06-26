@@ -1,9 +1,10 @@
 """Tests methods in water restriction handler module"""
 
-import pytest
 from datetime import datetime
 from typing import List
 from unittest.mock import MagicMock
+
+import pytest
 
 from aind_slims_service_server.handlers.water_restriction import (
     WaterRestrictionSessionHandler,

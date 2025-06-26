@@ -6,21 +6,25 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from slims.slims import Slims
 
 from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
+from aind_slims_service_server.handlers.histology import (
+    HistologySessionHandler,
+)
+from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.handlers.instrument import (
     InstrumentSessionHandler,
 )
-from aind_slims_service_server.handlers.histology import (
-    HistologySessionHandler,
+from aind_slims_service_server.handlers.viral_injection import (
+    ViralInjectionSessionHandler,
 )
 from aind_slims_service_server.handlers.water_restriction import (
     WaterRestrictionSessionHandler,
 )
-from aind_slims_service_server.handlers.imaging import ImagingSessionHandler
 from aind_slims_service_server.models import (
     HealthCheck,
     SlimsEcephysData,
-    SlimsSpimData,
     SlimsHistologyData,
+    SlimsSpimData,
+    SlimsViralInjectionData,
     SlimsWaterRestrictionData,
 )
 from aind_slims_service_server.session import get_session
@@ -36,7 +40,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-async def get_health() -> HealthCheck:
+def get_health() -> HealthCheck:
     """
     ## Endpoint to perform a healthcheck on.
 
@@ -50,7 +54,7 @@ async def get_health() -> HealthCheck:
     "/ecephys_sessions",
     response_model=List[SlimsEcephysData],
 )
-async def get_ecephys_sessions(
+def get_ecephys_sessions(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -98,7 +102,7 @@ async def get_ecephys_sessions(
     "/aind_instruments/{input_id}",
     response_model=List[Dict[str, Any]],
 )
-async def get_aind_instrument(
+def get_aind_instrument(
     input_id: str = Path(
         ..., examples=["440_SmartSPIM1_20240327"], description="Instrument ID"
     ),
@@ -123,7 +127,7 @@ async def get_aind_instrument(
 
 
 @router.get("/smartspim_imaging", response_model=List[SlimsSpimData])
-async def get_smartspim_imaging(
+def get_smartspim_imaging(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -160,7 +164,7 @@ async def get_smartspim_imaging(
 
 
 @router.get("/histology", response_model=List[SlimsHistologyData])
-async def get_histology_data(
+def get_histology_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -199,7 +203,7 @@ async def get_histology_data(
 @router.get(
     "/water_restriction", response_model=List[SlimsWaterRestrictionData]
 )
-async def get_water_restriction_data(
+def get_water_restriction_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -216,7 +220,7 @@ async def get_water_restriction_data(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2024-12-14T00:00:00", "2024-12-14", "2025-12-14T00:00:00Z"],
+        examples=["2024-12-14T00:00:00", "2024-12-14", "2024-12-14T00:00:00Z"],
     ),
     session: Slims = Depends(get_session),
 ):
@@ -233,3 +237,40 @@ async def get_water_restriction_data(
     if len(water_restriction_data) == 0:
         raise HTTPException(status_code=404, detail="Not found")
     return water_restriction_data
+
+
+@router.get("/viral_injections", response_model=List[SlimsViralInjectionData])
+def get_viral_injections(
+    subject_id: Optional[str] = Query(
+        None,
+        alias="subject_id",
+        description="Subject ID",
+        examples=["614178"],
+    ),
+    start_date_gte: Optional[str] = Query(
+        None,
+        alias="start_date_gte",
+        description="Date performed on or after. (ISO format)",
+        examples=["2025-04-10T00:00:00", "2025-04-10", "2025-04-10T00:00:00Z"],
+    ),
+    end_date_lte: Optional[str] = Query(
+        None,
+        alias="end_date_lte",
+        description="Date performed on or before. (ISO format)",
+        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
+    ),
+    session: Slims = Depends(get_session),
+):
+    """
+    ## Viral Injection data
+    Retrieves viral injection information from SLIMS.
+    """
+    handler = ViralInjectionSessionHandler(session)
+    viral_injection_data = handler.get_viral_injection_info_from_slims(
+        subject_id=subject_id,
+        start_date_greater_than_or_equal=start_date_gte,
+        end_date_less_than_or_equal=end_date_lte,
+    )
+    if len(viral_injection_data) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return viral_injection_data
