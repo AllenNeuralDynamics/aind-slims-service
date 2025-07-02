@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status
 from slims.slims import Slims
 
 from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
@@ -92,10 +92,7 @@ def get_ecephys_sessions(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(slims_ecephys_sessions) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return slims_ecephys_sessions
+    return slims_ecephys_sessions
 
 
 @router.get(
@@ -121,8 +118,6 @@ def get_aind_instrument(
     """
     handler = InstrumentSessionHandler(session)
     instrument_data = handler.get_instrument_data(input_id, partial_match)
-    if len(instrument_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return instrument_data
 
 
@@ -158,8 +153,6 @@ def get_smartspim_imaging(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(spim_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return spim_data
 
 
@@ -195,8 +188,6 @@ def get_histology_data(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(histology_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return histology_data
 
 
@@ -234,8 +225,6 @@ def get_water_restriction_data(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(water_restriction_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return water_restriction_data
 
 
@@ -271,6 +260,4 @@ def get_viral_injections(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(viral_injection_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return viral_injection_data

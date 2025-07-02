@@ -1,6 +1,6 @@
 """Test routes"""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from starlette.testclient import TestClient
@@ -26,15 +26,6 @@ class TestRoutes:
         assert len(data) > 0
         assert data[0]["subject_id"] == "750108"
 
-    def test_get_404_ecephys_sessions(
-        self, client: TestClient, mock_get_ecephys_data: MagicMock
-    ):
-        """Tests a missing data response"""
-        response = client.get("/ecephys_sessions?subject_id=0")
-        expected_response = {"detail": "Not found"}
-        assert response.status_code == 404
-        assert response.json() == expected_response
-
     def test_get_200_instrument(
         self, client: TestClient, mock_get_instrument_data: MagicMock
     ):
@@ -53,14 +44,6 @@ class TestRoutes:
         data = response.json()
         assert data[0]["instrument_id"] == "SmartSPIM2-2"
 
-    def test_get_404_instrument(self, client: TestClient):
-        """Tests a missing instrument response"""
-        with patch("slims.slims.Slims.fetch", return_value=[]):
-            response = client.get("/aind_instruments/nonExistentInstrument")
-            expected_response = {"detail": "Not found"}
-            assert response.status_code == 404
-            assert response.json() == expected_response
-
     def test_get_200_smartspim_imaging(
         self, client: TestClient, mock_get_imaging_data: MagicMock
     ):
@@ -71,15 +54,6 @@ class TestRoutes:
         assert isinstance(data, list)
         assert len(data) > 0
         assert data[0]["subject_id"] == "744742"
-
-    def test_get_404_smartspim_imaging(
-        self, client: TestClient, mock_get_imaging_data: MagicMock
-    ):
-        """Tests a missing SmartSPIM imaging data response"""
-        response = client.get("/smartspim_imaging?subject_id=0")
-        expected_response = {"detail": "Not found"}
-        assert response.status_code == 404
-        assert response.json() == expected_response
 
     def test_get_200_histology_data(
         self, client: TestClient, mock_get_histology_data: MagicMock
@@ -92,15 +66,6 @@ class TestRoutes:
         assert len(data) > 0
         assert data[0]["subject_id"] == "754372"
 
-    def test_get_404_histology_data(
-        self, client: TestClient, mock_get_histology_data: MagicMock
-    ):
-        """Tests a missing histology data response"""
-        response = client.get("/histology?subject_id=0")
-        expected_response = {"detail": "Not found"}
-        assert response.status_code == 404
-        assert response.json() == expected_response
-
     def test_get_200_water_restriction_data(
         self, client: TestClient, mock_get_water_restriction_data: MagicMock
     ):
@@ -112,15 +77,6 @@ class TestRoutes:
         assert len(data) > 0
         assert data[0]["subject_id"] == "762287"
 
-    def test_get_404_water_restriction_data(
-        self, client: TestClient, mock_get_water_restriction_data: MagicMock
-    ):
-        """Tests a missing water restriction data response"""
-        response = client.get("/water_restriction?subject_id=0")
-        expected_response = {"detail": "Not found"}
-        assert response.status_code == 404
-        assert response.json() == expected_response
-
     def test_get_200_viral_injection_data(
         self, client: TestClient, mock_get_viral_injection_data: MagicMock
     ):
@@ -131,15 +87,6 @@ class TestRoutes:
         assert isinstance(data, list)
         assert len(data) > 0
         assert data[0]["assigned_mice"] == ["614178"]
-
-    def test_get_404_viral_injection_data(
-        self, client: TestClient, mock_get_viral_injection_data: MagicMock
-    ):
-        """Tests a missing viral injection data response"""
-        response = client.get("/viral_injections?subject_id=0")
-        expected_response = {"detail": "Not found"}
-        assert response.status_code == 404
-        assert response.json() == expected_response
 
 
 if __name__ == "__main__":
