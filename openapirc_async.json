@@ -2,5 +2,5 @@
    "packageName": "aind_slims_service_async_client",
    "projectName": "aind-slims-service-async-client",
    "library": "asyncio",
-   "packageVersion": "0.2.0"
+   "packageVersion": "0.2.2"
 }

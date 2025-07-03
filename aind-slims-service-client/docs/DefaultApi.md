@@ -39,7 +39,7 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    input_id = 'input_id_example' # str | Instrument ID
+    input_id = '440_SmartSPIM1_20240327' # str | Instrument ID
     partial_match = False # bool | If true, will search for a partial match that contains the input_id string (optional) (default to False)
 
     try:
@@ -111,10 +111,10 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    subject_id = 'subject_id_example' # str |  (optional)
-    session_name = 'session_name_example' # str | Name of the session (optional)
-    start_date_gte = 'start_date_gte_example' # str | Experiment run created on or after. (ISO format) (optional)
-    end_date_lte = 'end_date_lte_example' # str | Experiment run created on or before. (ISO format) (optional)
+    subject_id = '750108' # str |  (optional)
+    session_name = 'ecephys_750108_2024-12-23_14-51-45' # str | Name of the session (optional)
+    start_date_gte = '2025-04-10T00:00:00' # str | Experiment run created on or after. (ISO format) (optional)
+    end_date_lte = '2025-04-11T00:00:00' # str | Experiment run created on or before. (ISO format) (optional)
 
     try:
         # Get Ecephys Sessions
@@ -187,9 +187,9 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    subject_id = 'subject_id_example' # str | Subject ID (optional)
-    start_date_gte = 'start_date_gte_example' # str | Date performed on or after. (ISO format) (optional)
-    end_date_lte = 'end_date_lte_example' # str | Date performed on or before. (ISO format) (optional)
+    subject_id = '744742' # str | Subject ID (optional)
+    start_date_gte = '2025-02-06T00:00:00' # str | Date performed on or after. (ISO format) (optional)
+    end_date_lte = '2025-02-07T00:00:00' # str | Date performed on or before. (ISO format) (optional)
 
     try:
         # Get Histology Data
@@ -261,9 +261,9 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    subject_id = 'subject_id_example' # str | Subject ID (optional)
-    start_date_gte = 'start_date_gte_example' # str | Date performed on or after. (ISO format) (optional)
-    end_date_lte = 'end_date_lte_example' # str | Date performed on or before. (ISO format) (optional)
+    subject_id = '744742' # str | Subject ID (optional)
+    start_date_gte = '2025-02-12T00:00:00' # str | Date performed on or after. (ISO format) (optional)
+    end_date_lte = '2025-02-13T00:00:00' # str | Date performed on or before. (ISO format) (optional)
 
     try:
         # Get Smartspim Imaging
@@ -335,9 +335,9 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    subject_id = 'subject_id_example' # str | Subject ID (optional)
-    start_date_gte = 'start_date_gte_example' # str | Date performed on or after. (ISO format) (optional)
-    end_date_lte = 'end_date_lte_example' # str | Date performed on or before. (ISO format) (optional)
+    subject_id = '614178' # str | Subject ID (optional)
+    start_date_gte = '2025-04-10T00:00:00' # str | Date performed on or after. (ISO format) (optional)
+    end_date_lte = '2025-04-11T00:00:00' # str | Date performed on or before. (ISO format) (optional)
 
     try:
         # Get Viral Injections
@@ -409,9 +409,9 @@ configuration = aind_slims_service_client.Configuration(
 with aind_slims_service_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aind_slims_service_client.DefaultApi(api_client)
-    subject_id = 'subject_id_example' # str | Subject ID (optional)
-    start_date_gte = 'start_date_gte_example' # str | Date performed on or after. (ISO format) (optional)
-    end_date_lte = 'end_date_lte_example' # str | Date performed on or before. (ISO format) (optional)
+    subject_id = '762287' # str | Subject ID (optional)
+    start_date_gte = '2024-12-13T00:00:00' # str | Date performed on or after. (ISO format) (optional)
+    end_date_lte = '2024-12-14T00:00:00' # str | Date performed on or before. (ISO format) (optional)
 
     try:
         # Get Water Restriction Data
