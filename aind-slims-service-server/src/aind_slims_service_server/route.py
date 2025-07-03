@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status
 from slims.slims import Slims
 
 from aind_slims_service_server.handlers.ecephys import EcephysSessionHandler
@@ -58,25 +58,69 @@ def get_ecephys_sessions(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
-        examples=["750108"],
+        openapi_examples={
+            "default": {
+                "summary": "An example subject ID",
+                "description": "Example subject ID for SLIMS ecephys data",
+                "value": "750108",
+            }
+        },
     ),
     session_name: Optional[str] = Query(
         None,
         alias="session_name",
         description="Name of the session",
-        examples=["ecephys_750108_2024-12-23_14-51-45"],
+        openapi_examples={
+            "default": {
+                "summary": "An example session name",
+                "description": "Example session name for ecephys data",
+                "value": "ecephys_750108_2024-12-23_14-51-45",
+            }
+        },
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Experiment run created on or after. (ISO format)",
-        examples=["2025-04-10T00:00:00", "2025-04-10", "2025-04-10T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-04-10T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-04-10",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-04-10T00:00:00Z",
+            },
+        },
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Experiment run created on or before. (ISO format)",
-        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-04-11T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-04-11",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-04-11T00:00:00Z",
+            },
+        },
     ),
     session: Slims = Depends(get_session),
 ):
@@ -92,10 +136,7 @@ def get_ecephys_sessions(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(slims_ecephys_sessions) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
-    else:
-        return slims_ecephys_sessions
+    return slims_ecephys_sessions
 
 
 @router.get(
@@ -104,7 +145,15 @@ def get_ecephys_sessions(
 )
 def get_aind_instrument(
     input_id: str = Path(
-        ..., examples=["440_SmartSPIM1_20240327"], description="Instrument ID"
+        ...,
+        openapi_examples={
+            "default": {
+                "summary": "An example instrument ID",
+                "description": "Example instrument ID for SLIMS Instruments",
+                "value": "440_SmartSPIM1_20240327",
+            }
+        },
+        description="Instrument ID",
     ),
     partial_match: bool = Query(
         False,
@@ -121,8 +170,6 @@ def get_aind_instrument(
     """
     handler = InstrumentSessionHandler(session)
     instrument_data = handler.get_instrument_data(input_id, partial_match)
-    if len(instrument_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return instrument_data
 
 
@@ -132,19 +179,57 @@ def get_smartspim_imaging(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["744742"],
+        openapi_examples={
+            "default": {
+                "summary": "An example subject ID",
+                "description": "Example subject ID for SmartSPIM imaging data",
+                "value": "744742",
+            }
+        },
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2025-02-12T00:00:00", "2025-02-12", "2025-02-12T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-02-12T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-02-12",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-02-12T00:00:00Z",
+            },
+        },
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2025-02-13T00:00:00", "2025-02-13", "2025-02-13T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-02-13T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-02-13",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-02-13T00:00:00Z",
+            },
+        },
     ),
     session: Slims = Depends(get_session),
 ):
@@ -158,8 +243,6 @@ def get_smartspim_imaging(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(spim_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return spim_data
 
 
@@ -169,19 +252,57 @@ def get_histology_data(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["744742"],
+        openapi_examples={
+            "default": {
+                "summary": "An example subject ID",
+                "description": "Example subject ID for histology data",
+                "value": "744742",
+            }
+        },
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2025-02-06T00:00:00", "2025-02-06", "2025-02-06T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-02-06T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-02-06",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-02-06T00:00:00Z",
+            },
+        },
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2025-02-07T00:00:00", "2025-02-07", "2025-02-07T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-02-07T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-02-07",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-02-07T00:00:00Z",
+            },
+        },
     ),
     session: Slims = Depends(get_session),
 ):
@@ -195,8 +316,6 @@ def get_histology_data(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(histology_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return histology_data
 
 
@@ -208,19 +327,57 @@ def get_water_restriction_data(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["762287"],
+        openapi_examples={
+            "default": {
+                "summary": "An example subject ID",
+                "description": "Example subject ID for water restriction data",
+                "value": "762287",
+            }
+        },
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2024-12-13T00:00:00", "2024-12-13", "2024-12-13T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2024-12-13T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2024-12-13",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2024-12-13T00:00:00Z",
+            },
+        },
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2024-12-14T00:00:00", "2024-12-14", "2024-12-14T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2024-12-14T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2024-12-14",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2024-12-14T00:00:00Z",
+            },
+        },
     ),
     session: Slims = Depends(get_session),
 ):
@@ -234,8 +391,6 @@ def get_water_restriction_data(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(water_restriction_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return water_restriction_data
 
 
@@ -245,19 +400,57 @@ def get_viral_injections(
         None,
         alias="subject_id",
         description="Subject ID",
-        examples=["614178"],
+        openapi_examples={
+            "default": {
+                "summary": "An example subject ID",
+                "description": "Example subject ID for viral injection data",
+                "value": "614178",
+            }
+        },
     ),
     start_date_gte: Optional[str] = Query(
         None,
         alias="start_date_gte",
         description="Date performed on or after. (ISO format)",
-        examples=["2025-04-10T00:00:00", "2025-04-10", "2025-04-10T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-04-10T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-04-10",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-04-10T00:00:00Z",
+            },
+        },
     ),
     end_date_lte: Optional[str] = Query(
         None,
         alias="end_date_lte",
         description="Date performed on or before. (ISO format)",
-        examples=["2025-04-11T00:00:00", "2025-04-11", "2025-04-11T00:00:00Z"],
+        openapi_examples={
+            "iso_datetime": {
+                "summary": "ISO datetime format",
+                "description": "Full ISO datetime with time",
+                "value": "2025-04-11T00:00:00",
+            },
+            "iso_date": {
+                "summary": "ISO date format",
+                "description": "Date only in ISO format",
+                "value": "2025-04-11",
+            },
+            "iso_datetime_z": {
+                "summary": "ISO datetime with timezone",
+                "description": "ISO datetime with Z timezone indicator",
+                "value": "2025-04-11T00:00:00Z",
+            },
+        },
     ),
     session: Slims = Depends(get_session),
 ):
@@ -271,6 +464,4 @@ def get_viral_injections(
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
     )
-    if len(viral_injection_data) == 0:
-        raise HTTPException(status_code=404, detail="Not found")
     return viral_injection_data
