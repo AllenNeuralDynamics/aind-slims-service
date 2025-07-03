@@ -62,7 +62,7 @@ def get_ecephys_sessions(
             "default": {
                 "summary": "An example subject ID",
                 "description": "Example subject ID for SLIMS ecephys data",
-                "value": "750108"
+                "value": "750108",
             }
         },
     ),
@@ -74,7 +74,7 @@ def get_ecephys_sessions(
             "default": {
                 "summary": "An example session name",
                 "description": "Example session name for ecephys data",
-                "value": "ecephys_750108_2024-12-23_14-51-45"
+                "value": "ecephys_750108_2024-12-23_14-51-45",
             }
         },
     ),
@@ -86,18 +86,18 @@ def get_ecephys_sessions(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-04-10T00:00:00"
+                "value": "2025-04-10T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-04-10"
+                "value": "2025-04-10",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-04-10T00:00:00Z"
-            }
+                "value": "2025-04-10T00:00:00Z",
+            },
         },
     ),
     end_date_lte: Optional[str] = Query(
@@ -108,18 +108,18 @@ def get_ecephys_sessions(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-04-11T00:00:00"
+                "value": "2025-04-11T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-04-11"
+                "value": "2025-04-11",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-04-11T00:00:00Z"
-            }
+                "value": "2025-04-11T00:00:00Z",
+            },
         },
     ),
     session: Slims = Depends(get_session),
@@ -145,15 +145,15 @@ def get_ecephys_sessions(
 )
 def get_aind_instrument(
     input_id: str = Path(
-        ..., 
+        ...,
         openapi_examples={
             "default": {
                 "summary": "An example instrument ID",
-                "description": "Example instrument ID for SLIMS instrument data",
-                "value": "440_SmartSPIM1_20240327"
+                "description": "Example instrument ID for SLIMS Instruments",
+                "value": "440_SmartSPIM1_20240327",
             }
         },
-        description="Instrument ID"
+        description="Instrument ID",
     ),
     partial_match: bool = Query(
         False,
@@ -183,7 +183,7 @@ def get_smartspim_imaging(
             "default": {
                 "summary": "An example subject ID",
                 "description": "Example subject ID for SmartSPIM imaging data",
-                "value": "744742"
+                "value": "744742",
             }
         },
     ),
@@ -195,18 +195,18 @@ def get_smartspim_imaging(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-02-12T00:00:00"
+                "value": "2025-02-12T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-02-12"
+                "value": "2025-02-12",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-02-12T00:00:00Z"
-            }
+                "value": "2025-02-12T00:00:00Z",
+            },
         },
     ),
     end_date_lte: Optional[str] = Query(
@@ -217,18 +217,18 @@ def get_smartspim_imaging(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-02-13T00:00:00"
+                "value": "2025-02-13T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-02-13"
+                "value": "2025-02-13",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-02-13T00:00:00Z"
-            }
+                "value": "2025-02-13T00:00:00Z",
+            },
         },
     ),
     session: Slims = Depends(get_session),
@@ -256,7 +256,7 @@ def get_histology_data(
             "default": {
                 "summary": "An example subject ID",
                 "description": "Example subject ID for histology data",
-                "value": "744742"
+                "value": "744742",
             }
         },
     ),
@@ -268,18 +268,18 @@ def get_histology_data(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-02-06T00:00:00"
+                "value": "2025-02-06T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-02-06"
+                "value": "2025-02-06",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-02-06T00:00:00Z"
-            }
+                "value": "2025-02-06T00:00:00Z",
+            },
         },
     ),
     end_date_lte: Optional[str] = Query(
@@ -290,18 +290,18 @@ def get_histology_data(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-02-07T00:00:00"
+                "value": "2025-02-07T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-02-07"
+                "value": "2025-02-07",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-02-07T00:00:00Z"
-            }
+                "value": "2025-02-07T00:00:00Z",
+            },
         },
     ),
     session: Slims = Depends(get_session),
@@ -331,7 +331,7 @@ def get_water_restriction_data(
             "default": {
                 "summary": "An example subject ID",
                 "description": "Example subject ID for water restriction data",
-                "value": "762287"
+                "value": "762287",
             }
         },
     ),
@@ -343,18 +343,18 @@ def get_water_restriction_data(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2024-12-13T00:00:00"
+                "value": "2024-12-13T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2024-12-13"
+                "value": "2024-12-13",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2024-12-13T00:00:00Z"
-            }
+                "value": "2024-12-13T00:00:00Z",
+            },
         },
     ),
     end_date_lte: Optional[str] = Query(
@@ -365,18 +365,18 @@ def get_water_restriction_data(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2024-12-14T00:00:00"
+                "value": "2024-12-14T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2024-12-14"
+                "value": "2024-12-14",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2024-12-14T00:00:00Z"
-            }
+                "value": "2024-12-14T00:00:00Z",
+            },
         },
     ),
     session: Slims = Depends(get_session),
@@ -404,7 +404,7 @@ def get_viral_injections(
             "default": {
                 "summary": "An example subject ID",
                 "description": "Example subject ID for viral injection data",
-                "value": "614178"
+                "value": "614178",
             }
         },
     ),
@@ -416,18 +416,18 @@ def get_viral_injections(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-04-10T00:00:00"
+                "value": "2025-04-10T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-04-10"
+                "value": "2025-04-10",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-04-10T00:00:00Z"
-            }
+                "value": "2025-04-10T00:00:00Z",
+            },
         },
     ),
     end_date_lte: Optional[str] = Query(
@@ -438,18 +438,18 @@ def get_viral_injections(
             "iso_datetime": {
                 "summary": "ISO datetime format",
                 "description": "Full ISO datetime with time",
-                "value": "2025-04-11T00:00:00"
+                "value": "2025-04-11T00:00:00",
             },
             "iso_date": {
                 "summary": "ISO date format",
                 "description": "Date only in ISO format",
-                "value": "2025-04-11"
+                "value": "2025-04-11",
             },
             "iso_datetime_z": {
                 "summary": "ISO datetime with timezone",
                 "description": "ISO datetime with Z timezone indicator",
-                "value": "2025-04-11T00:00:00Z"
-            }
+                "value": "2025-04-11T00:00:00Z",
+            },
         },
     ),
     session: Slims = Depends(get_session),
