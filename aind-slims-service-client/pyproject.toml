@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aind_slims_service_client"
-version = "0.2.3"
+version = "0.2.4"
 description = "aind-slims-service"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "NoLicense"
