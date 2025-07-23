@@ -55,7 +55,7 @@
             "title": "Category"
          },
          {
-            "name": "cntn_cf_fk_reagentCatalogNumber",
+            "name": "cntn_cf_fk_catalogNumberReagents",
             "value": 1664,
             "displayValue": "112372-100G",
             "datatype": "FOREIGN_KEY",
