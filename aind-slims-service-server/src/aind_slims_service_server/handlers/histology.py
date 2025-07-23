@@ -50,7 +50,7 @@ class HistologySessionHandler(SlimsTableHandler):
                     record, "cntn_cf_lotNumber"
                 )
                 n_reagent_name = self.get_attr_or_none(
-                    record, "cntn_cf_fk_reagentCatalogNumber", "displayValue"
+                    record, "cntn_cf_fk_catalogNumberReagents", "displayValue"
                 )
                 n_reagent_source = self.get_attr_or_none(
                     record, "cntn_fk_source", "displayValue"
@@ -334,7 +334,7 @@ class HistologySessionHandler(SlimsTableHandler):
         _ = self.get_rows_from_foreign_table(
             input_table="Content",
             input_rows=reagent_content_rows,
-            input_table_cols=["cntn_cf_fk_reagentCatalogNumber"],
+            input_table_cols=["cntn_cf_fk_catalogNumberReagents"],
             foreign_table="ReferenceDataRecord",
             foreign_table_col="rdrc_pk",
             graph=G,
