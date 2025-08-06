@@ -150,6 +150,13 @@ class ImagingSessionHandler(SlimsTableHandler):
                             "ordr_cf_fluorescenceChannels_CellSegmentation",
                         )
                     )
+                    spim_data.order_created_by = self.get_attr_or_none(
+                        row,
+                        "ordr_createdBy",
+                    )
+                    spim_data.order_project_id = self.get_attr_or_none(
+                        row, "ordr_cf_fk_projectId", "displayValue"
+                    )
             if subject_id is None or subject_id == spim_data.subject_id:
                 spim_data_list.append(spim_data)
         return spim_data_list
