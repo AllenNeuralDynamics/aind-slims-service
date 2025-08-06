@@ -86,6 +86,8 @@ class SlimsSpimData(BaseModel):
     """Expected Model that needs to be extracted from SLIMS"""
 
     experiment_run_created_on: Optional[AwareDatetime] = None
+    order_created_by: Optional[str] = None
+    order_project_id: Optional[str] = None
     specimen_id: Optional[str] = None
     subject_id: Optional[str] = None
     protocol_name: Optional[str] = None

@@ -202,6 +202,8 @@ def test_imaging_data():
     return [
         SlimsSpimData(
             experiment_run_created_on=1739383241200,
+            order_project_id="Some Project - Some Subproject 1",
+            order_created_by="PersonS",
             specimen_id="BRN00000018",
             subject_id="744742",
             protocol_name="Imaging cleared mouse brains on SmartSPIM",

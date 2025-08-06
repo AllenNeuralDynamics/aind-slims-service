@@ -58,6 +58,28 @@
             "value": null,
             "hidden": false,
             "editable": true
+            },
+            {
+                "datatype": "FOREIGN_KEY", 
+                "name": "ordr_cf_fk_projectId", 
+                "title": "Project ID", 
+                "position": 19, 
+                "value": 1975, 
+                "hidden": false, 
+                "editable": true, 
+                "foreignTable": "ReferenceDataRecord", 
+                "displayValue": "Some Project - Some Subproject 1",
+                "displayField": "ordr_cf_fk_projectId_display", 
+                "foreignDisplayColumn": "rdrc_name"
+            },
+            {
+                "datatype": "STRING", 
+                "name": "ordr_createdBy", 
+                "title": "Created by", 
+                "position": 30, 
+                "value": "PersonS", 
+                "hidden": false, 
+                "editable": true
             }
         ]
     }
