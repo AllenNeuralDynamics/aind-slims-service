@@ -7,6 +7,8 @@ Expected Model that needs to be extracted from SLIMS
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **experiment_run_created_on** | **datetime** |  | [optional] 
+**order_created_by** | **str** |  | [optional] 
+**order_project_id** | **str** |  | [optional] 
 **specimen_id** | **str** |  | [optional] 
 **subject_id** | **str** |  | [optional] 
 **protocol_name** | **str** |  | [optional] 
