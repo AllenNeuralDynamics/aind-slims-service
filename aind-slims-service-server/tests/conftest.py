@@ -267,8 +267,16 @@ def test_histology_data():
             ),
             specimen_id="BRN00000002",
             subject_id="754372",
-            protocol_id='<a href="https://www.protocols.io/edit/refractive-index-matching-ethyl-cinnamate-cukpwuvn" target="_blank" rel="nofollow noopener noreferrer">Refractive Index Matching - Ethyl Cinnamate</a>',
-            protocol_name="Refractive Index Matching - Ethyl Cinnamate (UNPUBLISHED)",
+            protocol_id=(
+                '<a href="https://www.protocols.io/edit'
+                '/refractive-index-matching-ethyl-cinnamate-cukpwuvn"'
+                ' target="_blank"'
+                ' rel="nofollow noopener noreferrer">'
+                "Refractive Index Matching - Ethyl Cinnamate</a>"
+            ),
+            protocol_name=(
+                "Refractive Index Matching - Ethyl Cinnamate (UNPUBLISHED)"
+            ),
             washes=[
                 HistologyWashData(
                     wash_name="Refractive Index Matching Wash",
