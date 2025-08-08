@@ -45,13 +45,13 @@ class HistologySessionHandler(SlimsTableHandler):
             ) in [
                 "Reagents, Externally Manufactured",
                 "Reagents, Internally Produced",
+                "Reagents, Internal",
+                "Reagents, External",
             ]:
                 n_reagent_lot_number = self.get_attr_or_none(
                     record, "cntn_cf_lotNumber"
                 )
-                n_reagent_name = self.get_attr_or_none(
-                    record, "cntn_cf_fk_catalogNumberReagents", "displayValue"
-                )
+                n_reagent_name = self.get_attr_or_none(record, "cntn_barCode")
                 n_reagent_source = self.get_attr_or_none(
                     record, "cntn_fk_source", "displayValue"
                 )
@@ -167,6 +167,7 @@ class HistologySessionHandler(SlimsTableHandler):
 
         histology_data_list = []
         for node in root_nodes:
+            subject_and_specimen_ids = []
             histology_data = SlimsHistologyData()
             washes = []
             experiment_run_created_on_ts = self.get_attr_or_none(
@@ -197,6 +198,7 @@ class HistologySessionHandler(SlimsTableHandler):
                     "Wash 3",
                     "Wash 4",
                     "Refractive Index Matching Wash",
+                    "Refractive Index Matching Wash 2",
                     "Primary Antibody Wash",
                     "Secondary Antibody Wash",
                     "MBS Wash",
@@ -226,13 +228,22 @@ class HistologySessionHandler(SlimsTableHandler):
                         n_subject_id, n_specimen_id = self._get_specimen_data(
                             g=g, exp_run_step_content=exp_run_step_child
                         )
-                        if n_subject_id is not None:
-                            histology_data.subject_id = n_subject_id
-                        if n_specimen_id is not None:
-                            histology_data.specimen_id = n_specimen_id
+                        subject_and_specimen_ids.append(
+                            (n_subject_id, n_specimen_id)
+                        )
             histology_data.washes = washes
-            if subject_id is None or subject_id == histology_data.subject_id:
-                histology_data_list.append(histology_data)
+            for n_ids in subject_and_specimen_ids:
+                n_subject_id = n_ids[0]
+                n_specimen_id = n_ids[1]
+                if subject_id is None or subject_id == n_subject_id:
+                    subject_histology_data = histology_data.model_copy(
+                        deep=True,
+                        update={
+                            "subject_id": n_subject_id,
+                            "specimen_id": n_specimen_id,
+                        },
+                    )
+                    histology_data_list.append(subject_histology_data)
         return histology_data_list
 
     def _get_graph(
