@@ -45,13 +45,13 @@ class HistologySessionHandler(SlimsTableHandler):
             ) in [
                 "Reagents, Externally Manufactured",
                 "Reagents, Internally Produced",
-                "Reagents, Internal",
-                "Reagents, External",
             ]:
                 n_reagent_lot_number = self.get_attr_or_none(
                     record, "cntn_cf_lotNumber"
                 )
-                n_reagent_name = self.get_attr_or_none(record, "cntn_barCode")
+                n_reagent_name = self.get_attr_or_none(
+                    record, "cntn_cf_fk_catalogNumberReagents", "displayValue"
+                )
                 n_reagent_source = self.get_attr_or_none(
                     record, "cntn_fk_source", "displayValue"
                 )

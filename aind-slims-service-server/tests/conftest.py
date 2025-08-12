@@ -290,7 +290,7 @@ def test_histology_data():
                     modified_by="PersonM",
                     reagents=[
                         HistologyReagentData(
-                            name="rgntEX00000020",
+                            name="112372-100G",
                             source=None,
                             lot_number="stbk5149",
                         )
