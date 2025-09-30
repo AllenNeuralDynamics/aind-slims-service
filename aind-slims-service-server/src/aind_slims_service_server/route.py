@@ -1,7 +1,7 @@
 """Module to handle endpoint responses"""
 
 from typing import Any, Dict, List, Optional
-
+from asyncio import to_thread
 from fastapi import APIRouter, Depends, Path, Query, status
 from slims.slims import Slims
 
@@ -40,7 +40,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-def get_health() -> HealthCheck:
+async def get_health() -> HealthCheck:
     """
     ## Endpoint to perform a healthcheck on.
 
@@ -54,7 +54,7 @@ def get_health() -> HealthCheck:
     "/ecephys_sessions",
     response_model=List[SlimsEcephysData],
 )
-def get_ecephys_sessions(
+async def get_ecephys_sessions(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -128,9 +128,8 @@ def get_ecephys_sessions(
     ## Ecephys session metadata
     Retrieves Ecephys session information from SLIMS.
     """
-    slims_ecephys_sessions = EcephysSessionHandler(
-        session=session
-    ).get_ephys_data_from_slims(
+    slims_ecephys_sessions = await to_thread(
+        EcephysSessionHandler(session=session).get_ephys_data_from_slims,
         subject_id=subject_id,
         session_name=session_name,
         start_date_greater_than_or_equal=start_date_gte,
@@ -143,7 +142,7 @@ def get_ecephys_sessions(
     "/aind_instruments/{input_id}",
     response_model=List[Dict[str, Any]],
 )
-def get_aind_instrument(
+async def get_aind_instrument(
     input_id: str = Path(
         ...,
         openapi_examples={
@@ -169,12 +168,14 @@ def get_aind_instrument(
     Retrieves AIND Instrument information from SLIMS.
     """
     handler = InstrumentSessionHandler(session)
-    instrument_data = handler.get_instrument_data(input_id, partial_match)
+    instrument_data = await to_thread(
+        handler.get_instrument_data, input_id, partial_match
+    )
     return instrument_data
 
 
 @router.get("/smartspim_imaging", response_model=List[SlimsSpimData])
-def get_smartspim_imaging(
+async def get_smartspim_imaging(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -238,7 +239,8 @@ def get_smartspim_imaging(
     Retrieves SmartSPIM imaging information from SLIMS.
     """
     handler = ImagingSessionHandler(session)
-    spim_data = handler.get_spim_data_from_slims(
+    spim_data = await to_thread(
+        handler.get_spim_data_from_slims,
         subject_id=subject_id,
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
@@ -247,7 +249,7 @@ def get_smartspim_imaging(
 
 
 @router.get("/histology", response_model=List[SlimsHistologyData])
-def get_histology_data(
+async def get_histology_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -311,7 +313,8 @@ def get_histology_data(
     Retrieves histology information from SLIMS.
     """
     handler = HistologySessionHandler(session)
-    histology_data = handler.get_histology_data_from_slims(
+    histology_data = await to_thread(
+        handler.get_histology_data_from_slims,
         subject_id=subject_id,
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
@@ -322,7 +325,7 @@ def get_histology_data(
 @router.get(
     "/water_restriction", response_model=List[SlimsWaterRestrictionData]
 )
-def get_water_restriction_data(
+async def get_water_restriction_data(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -386,7 +389,8 @@ def get_water_restriction_data(
     Retrieves water restriction information from SLIMS.
     """
     handler = WaterRestrictionSessionHandler(session)
-    water_restriction_data = handler.get_water_restriction_data_from_slims(
+    water_restriction_data = await to_thread(
+        handler.get_water_restriction_data_from_slims,
         subject_id=subject_id,
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
@@ -395,7 +399,7 @@ def get_water_restriction_data(
 
 
 @router.get("/viral_injections", response_model=List[SlimsViralInjectionData])
-def get_viral_injections(
+async def get_viral_injections(
     subject_id: Optional[str] = Query(
         None,
         alias="subject_id",
@@ -459,7 +463,8 @@ def get_viral_injections(
     Retrieves viral injection information from SLIMS.
     """
     handler = ViralInjectionSessionHandler(session)
-    viral_injection_data = handler.get_viral_injection_info_from_slims(
+    viral_injection_data = await to_thread(
+        handler.get_viral_injection_info_from_slims,
         subject_id=subject_id,
         start_date_greater_than_or_equal=start_date_gte,
         end_date_less_than_or_equal=end_date_lte,
