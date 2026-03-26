@@ -21,7 +21,9 @@ dependencies = [
     'aind-settings-utils>=0.1.0',
     'fastapi[standard]>=0.114.0',
     'slims-python-api',
-    'networkx'
+    'networkx',
+    'python-json-logger',
+    'PyYAML'
 ]
 
 [project.optional-dependencies]
