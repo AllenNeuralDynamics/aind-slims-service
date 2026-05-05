@@ -1,7 +1,7 @@
 """Models and schema definitions for backend data structures"""
 
 from decimal import Decimal
-from typing import List, Literal, Optional, Union
+from typing import List, Literal, Optional
 
 from pydantic import AwareDatetime, BaseModel
 
