@@ -125,7 +125,7 @@ class HistologyWashData(BaseModel):
     end_time: Optional[AwareDatetime] = None
     modified_by: Optional[str] = None
     reagents: List[HistologyReagentData] = []
-    mass: Optional[Decimal] = None
+    mass: Optional[int] = None
 
 
 class SlimsHistologyData(BaseModel):
