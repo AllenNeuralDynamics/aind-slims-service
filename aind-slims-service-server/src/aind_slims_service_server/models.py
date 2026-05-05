@@ -1,7 +1,7 @@
 """Models and schema definitions for backend data structures"""
 
 from decimal import Decimal
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, Union
 
 from pydantic import AwareDatetime, BaseModel
 
@@ -125,7 +125,7 @@ class HistologyWashData(BaseModel):
     end_time: Optional[AwareDatetime] = None
     modified_by: Optional[str] = None
     reagents: List[HistologyReagentData] = []
-    mass: Optional[Decimal] = None
+    mass: Optional[int] = None
 
 
 class SlimsHistologyData(BaseModel):
