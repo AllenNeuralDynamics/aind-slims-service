@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **end_time** | **datetime** |  | [optional] 
 **modified_by** | **str** |  | [optional] 
 **reagents** | [**List[HistologyReagentData]**](HistologyReagentData.md) |  | [optional] [default to []]
-**mass** | **str** |  | [optional] 
+**mass** | **int** |  | [optional] 
 
 ## Example
 
