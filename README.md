@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> (2026-11-15) This repository is no deprecated and no longer maintained.
+
 # aind-slims-service
 REST service to connect to SLIMS and return information.
 
